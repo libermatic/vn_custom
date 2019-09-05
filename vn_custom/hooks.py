@@ -23,8 +23,11 @@ fixtures = [
                 "in",
                 [
                     "Customer-naming_series-options",
+                    "Customer-customer_name-in_standard_filter",
                     "Supplier-naming_series-options",
+                    "Supplier-supplier_name-in_standard_filter",
                     "Item-naming_series-options",
+                    "Item-item_name-in_standard_filter",
                 ],
             ]
         ],
