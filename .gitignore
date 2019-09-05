@@ -5,3 +5,8 @@
 tags
 vn_custom/docs/current
 __pycache__
+
+# Bench runtime
+node_modules/
+vn_custom/public/node_modules
+yarn.lock
