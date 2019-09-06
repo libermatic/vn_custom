@@ -1,0 +1,129 @@
+<div class="vn-print">
+  {%- if not no_letterhead and letter_head-%}
+  <header>{{ letter_head }}</header>
+  {%- endif -%}
+  <main class="vn-details">
+    <div class="vn-no-shrink">
+      <svg
+        class="barcode"
+        jsbarcode-format="CODE128"
+        jsbarcode-value="{{ doc.name }}"
+        jsbarcode-textalign="left"
+        jsbarcode-textmargin="2"
+        jsbarcode-textposition="top"
+        jsbarcode-fontsize="10"
+        jsbarcode-height="25"
+        jsbarcode-width="1"
+        jsbarcode-margin="10"
+      />
+    </div>
+    <div class="vn-content vn-fill">
+      <dl>
+        <dt>Date</dt>
+        <dd>
+          {{ doc.get_formatted('posting_date') }} {{
+          doc.get_formatted('posting_time') }}
+        </dd>
+      </dl>
+      <dl>
+        <dt>Customer</dt>
+        <dd>{{ doc.customer_name }}</dd>
+      </dl>
+      {%- if doc.contact_mobile -%}
+      <dl>
+        <dt>Mobile</dt>
+        <dd>{{ doc.contact_mobile }}</dd>
+      </dl>
+      {%- endif -%}
+    </div>
+  </main>
+  <table class="table table-condensed no-border">
+    <thead>
+      <tr>
+        <th width="80%">Description</th>
+        <th width="20%" class="text-right">Qty</th>
+        <th class="text-right">Rate</th>
+        <th class="text-right">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for item in doc.items -%}
+      <tr>
+        <td>{{ item.item_name }}</td>
+        <td class="text-right">
+          <span>{{ item.get_formatted('qty', doc) }}</span>
+          <span class="vn-small-caps">{{ item.uom }}</span>
+        </td>
+        <td class="text-right">
+          {%- if item.rate == item.price_list_rate-%}
+          <span class="vn-nowrap">{{ item.get_formatted('rate', doc) }}</span>
+          {%- else -%}
+          <span class="vn-nowrap vn-deprecated">
+            {{ item.get_formatted('price_list_rate', doc) }}
+          </span>
+          <span class="vn-nowrap">{{ item.get_formatted('rate', doc) }}</span>
+          {%- endif -%}
+        </td>
+        <td class="vn-nowrap text-right">
+          {{ item.get_formatted('amount', doc) }}
+        </td>
+      </tr>
+      {%- endfor -%}
+    </tbody>
+    <tfoot>
+      {%- if doc.discount_amount -%}
+      <tr>
+        <td colspan="3" class="text-right">Total</td>
+        <td class="vn-nowrap text-right vn-strong">
+          {{ doc.get_formatted('total') }}
+        </td>
+      </tr>
+      {%- endif -%}
+      <tr>
+        <td colspan="3" class="text-right">
+          Grand Total {% if doc.discount_amount -%}<span
+            class="vn-emphasis vn-text-smaller"
+            >({{ doc.get_formatted('discount_amount') }})</span
+          >{%- endif -%}
+        </td>
+        <td class="vn-nowrap text-right vn-strong">
+          {{ doc.get_formatted('grand_total') }}
+        </td>
+      </tr>
+      {%- if doc.rounding_adjustment -%}
+      <tr>
+        <td colspan="3" class="text-right">
+          Rounded Total
+          <span class="vn-emphasis vn-text-smaller">
+            ({{ doc.get_formatted('rounding_adjustment') }})
+          </span>
+        </td>
+        <td class="vn-nowrap text-right vn-strong">
+          {{ doc.get_formatted('rounded_total') }}
+        </td>
+      </tr>
+      {%- endif -%}
+      <tr>
+        <td colspan="3" class="text-right">Paid Amount</td>
+        <td class="vn-nowrap text-right vn-strong">
+          {{ doc.get_formatted('paid_amount') }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  {%- if doc.term -%}
+  <section>{{ doc.terms }}</section>
+  {%- endif -%}
+  <div class="vn-fill"></div>
+  {%- if not no_letterhead and footer-%}
+  <footer>{{ footer }}</footer>
+  {%- endif -%}
+</div>
+
+<script
+  type="text/javascript"
+  src="/assets/js/libermatic_print.min.js"
+></script>
+<script type="text/javascript">
+  JsBarcode('.barcode').init();
+</script>

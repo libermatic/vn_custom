@@ -1,0 +1,78 @@
+@page {
+  size: 'A6';
+  margin: {{ page_margin or '5mm' }};
+}
+@media screen {
+  .print-format {
+    width: {{ page_width or '105mm' }};
+    height: {{ page_height or '148mm' }};
+    padding: {{ page_margin or '5mm' }};
+    max-width: {{ page_width or '105mm' }};
+    min-height: {{ page_height or '148mm' }};
+  }
+}
+.print-format th,
+.print-format td {
+  padding: 0.5em !important;
+}
+
+.vn-print {
+  font-family: monospace;
+  font-size: {{ base_font_size or '8pt' }};
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: calc({{ page_height or '148mm' }} - {{ page_margin or '5mm' }} * 2);
+}
+
+.vn-print dl {
+  margin: 0;
+  text-indent: -1em;
+  padding-left: 1em;
+}
+.vn-print dl > * {
+  display: inline;
+}
+.vn-print dt::after {
+  content: ':';
+}
+
+.vn-print table > tfoot td {
+  border-top: none;
+}
+
+.vn-details {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.vn-details > .vn-content {
+  padding: 5pt;
+}
+
+.vn-fill {
+  flex-grow: 1;
+}
+
+/* Inline styles */
+.vn-no-shrink {
+  flex-shrink: 0;
+}
+.vn-small-caps {
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+.vn-nowrap {
+  white-space: nowrap;
+}
+.vn-strong {
+  font-weight: bold;
+}
+.vn-emphasis {
+  font-style: italic;
+}
+.vn-text-smaller {
+  font-size: 0.9em;
+}
+.vn-deprecated {
+  text-decoration: line-through;
+  color: #8d99a6;
+}
