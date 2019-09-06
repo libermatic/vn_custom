@@ -2,29 +2,26 @@
   {%- if not no_letterhead and letter_head-%}
   <header>{{ letter_head }}</header>
   {%- endif -%}
+  <h1>
+    <span class="vn-strong">Invoice</span>
+    &middot;
+    <span>{{ doc.name }}</span>
+    &middot;
+    <span class="vn-text-smaller">{{ doc.get_formatted('posting_date') }}</span>
+  </h1>
   <main class="vn-details">
     <div class="vn-no-shrink">
       <svg
         class="barcode"
         jsbarcode-format="CODE128"
         jsbarcode-value="{{ doc.name }}"
-        jsbarcode-textalign="left"
-        jsbarcode-textmargin="2"
-        jsbarcode-textposition="top"
-        jsbarcode-fontsize="10"
+        jsbarcode-displayvalue="false"
         jsbarcode-height="25"
         jsbarcode-width="1"
         jsbarcode-margin="10"
       />
     </div>
     <div class="vn-content vn-fill">
-      <dl>
-        <dt>Date</dt>
-        <dd>
-          {{ doc.get_formatted('posting_date') }} {{
-          doc.get_formatted('posting_time') }}
-        </dd>
-      </dl>
       <dl>
         <dt>Customer</dt>
         <dd>{{ doc.customer_name }}</dd>

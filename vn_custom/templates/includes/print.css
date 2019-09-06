@@ -24,6 +24,17 @@
   min-height: calc({{ page_height or '148mm' }} - {{ page_margin or '5mm' }} * 2);
 }
 
+.vn-print h1 {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  padding: 0.3em;
+  border-bottom: 1px solid {{ style.border_color }};
+  margin: 0.3em 0.3em 0;
+}
+
 .vn-print dl {
   margin: 0;
   text-indent: -1em;
@@ -36,6 +47,9 @@
   content: ':';
 }
 
+.vn-print table {
+  margin: 1em 0;
+}
 .vn-print table > tfoot td {
   border-top: none;
 }
@@ -45,7 +59,7 @@
   flex-flow: row nowrap;
 }
 .vn-details > .vn-content {
-  padding: 5pt;
+  padding: 7pt 5pt 8pt;
 }
 
 .vn-fill {
