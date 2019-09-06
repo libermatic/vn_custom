@@ -28,6 +28,7 @@ fixtures = [
                     "Supplier-supplier_name-in_standard_filter",
                     "Item-naming_series-options",
                     "Item-item_name-in_standard_filter",
+                    "Sales Invoice-naming_series-options",
                 ],
             ]
         ],
