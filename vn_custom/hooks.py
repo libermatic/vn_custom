@@ -146,3 +146,8 @@ fixtures = [
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "vn_custom.event.get_events"
 # }
+
+# Jinja Environment Customizations
+# --------------------------------
+
+jenv = {"methods": ["get_mrp:vn_custom.utils.jinja.get_mrp"]}
