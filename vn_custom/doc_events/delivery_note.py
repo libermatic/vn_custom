@@ -53,10 +53,14 @@ def set_item_prices(items, posting_date, posting_time):
         item_price = get_first(prices)
         return frappe.get_doc("Item Price", item_price) if item_price else None
 
+    def has_margin_price(item_code):
+        return frappe.db.get_value("Item", item_code, "vn_has_margin_price")
+
     for item in items:
-        rate = get_rate(item.item_code)
-        if rate:
-            item_price = get_price(item.item_code)
-            if item_price and item_price.price_list_rate != rate:
-                item_price.price_list_rate = rate
-                item_price.save()
+        if has_margin_price(item.item_code):
+            rate = get_rate(item.item_code)
+            if rate:
+                item_price = get_price(item.item_code)
+                if item_price and item_price.price_list_rate != rate:
+                    item_price.price_list_rate = rate
+                    item_price.save()

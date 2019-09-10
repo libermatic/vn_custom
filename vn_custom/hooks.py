@@ -16,6 +16,10 @@ error_report_email = "support@libermatic.com"
 
 fixtures = [
     {
+        "doctype": "Custom Field",
+        "filters": [["name", "in", ["Item-vn_has_margin_price"]]],
+    },
+    {
         "doctype": "Property Setter",
         "filters": [
             [
@@ -35,7 +39,7 @@ fixtures = [
                 ],
             ]
         ],
-    }
+    },
 ]
 
 # Includes in <head>
