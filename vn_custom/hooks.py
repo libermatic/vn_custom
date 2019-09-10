@@ -106,13 +106,16 @@ fixtures = [
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "Sales Invoice": {
+        "on_submit": "vn_custom.doc_events.sales_invoice.on_submit",
+        "on_cancel": "vn_custom.doc_events.sales_invoice.on_cancel",
+    },
+    "Delivery Note": {
+        "on_submit": "vn_custom.doc_events.delivery_note.on_submit",
+        "on_cancel": "vn_custom.doc_events.delivery_note.on_cancel",
+    },
+}
 
 # Scheduled Tasks
 # ---------------
