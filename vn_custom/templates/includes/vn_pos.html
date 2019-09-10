@@ -51,12 +51,13 @@
           <span>{{ item.get_formatted('qty', doc) }}</span>
           <span class="vn-small-caps">{{ item.uom }}</span>
         </td>
+        {% set mrp = get_mrp(item.item_code) %}
         <td class="text-right">
-          {%- if item.rate == item.price_list_rate-%}
+          {%- if not mrp or item.rate == mrp-%}
           <span class="vn-nowrap">{{ item.get_formatted('rate', doc) }}</span>
           {%- else -%}
           <span class="vn-nowrap vn-deprecated">
-            {{ item.get_formatted('price_list_rate', doc) }}
+            {{ frappe.utils.fmt_money(mrp, currency=doc.currency) }}
           </span>
           <span class="vn-nowrap">{{ item.get_formatted('rate', doc) }}</span>
           {%- endif -%}
