@@ -30,10 +30,12 @@ def set_item_prices(items, posting_date, posting_time):
     )
 
     def get_price(item_code):
-        get_first = excepts(StopIteration, first, lambda __: None)
+        get_first = compose(
+            partial(get, "name"), excepts(StopIteration, first, lambda __: {})
+        )
         prices = frappe.db.sql(
             """
-                SELECT name, price_list_rate FROM `tabItem Price`
+                SELECT name FROM `tabItem Price`
                 WHERE
                     item_code = %(item_code)s AND
                     price_list = %(price_list)s AND
@@ -48,13 +50,13 @@ def set_item_prices(items, posting_date, posting_time):
                     "Cannot set {} Item Price because multiple prices exists"
                 ).format(selling_price_list)
             )
-        return get_first(prices)
+        item_price = get_first(prices)
+        return frappe.get_doc("Item Price", item_price) if item_price else None
 
     for item in items:
         rate = get_rate(item.item_code)
         if rate:
             item_price = get_price(item.item_code)
-            if item_price and item_price.get("price_list_rate") != rate:
-                frappe.db.set_value(
-                    "Item Price", item_price.get("name"), "price_list_rate", rate
-                )
+            if item_price and item_price.price_list_rate != rate:
+                item_price.price_list_rate = rate
+                item_price.save()
