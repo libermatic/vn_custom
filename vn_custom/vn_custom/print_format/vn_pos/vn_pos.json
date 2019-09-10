@@ -1,7 +1,7 @@
 {
  "align_labels_right": 0,
  "creation": "2019-09-06 14:40:34.411687",
- "css": "",
+ "css": "@media print {\n  .print-format {\n    height: 148mm;\n    width: 105mm;\n    margin-left: auto;\n    margin-right: auto;\n    padding: 5mm;\n      border: 1px solid red;\n\n  }\n}\n",
  "custom_format": 1,
  "default_print_language": "en",
  "disabled": 0,
@@ -12,7 +12,7 @@
  "html": "{% set page_width = '105mm' %}\n{% set page_height = '148mm' %}\n{% set page_margin = '5mm' %}\n{% set base_font_size = '8pt' %}\n\n\n<style>\n{% include \"templates/includes/print.css\" %}\n</style>\n\n{% include \"templates/includes/vn_pos.html\" %}",
  "idx": 0,
  "line_breaks": 0,
- "modified": "2019-09-06 22:56:55.255449",
+ "modified": "2019-09-10 18:34:42.768954",
  "modified_by": "Administrator",
  "module": "VN Custom",
  "name": "VN POS",
