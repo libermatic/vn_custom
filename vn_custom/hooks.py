@@ -17,7 +17,17 @@ error_report_email = "support@libermatic.com"
 fixtures = [
     {
         "doctype": "Custom Field",
-        "filters": [["name", "in", ["Item-vn_has_margin_price"]]],
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Item-vn_has_margin_price",
+                    "Sales Invoice Item-vn_mrp",
+                    "Sales Invoice Item-vn_valuation",
+                ],
+            ]
+        ],
     },
     {
         "doctype": "Property Setter",
@@ -36,6 +46,8 @@ fixtures = [
                     "Item Price-min_qty-in_list_view",
                     "Item Price-price_list-in_list_view",
                     "Sales Invoice-naming_series-options",
+                    "Sales Invoice Item-qty-columns",
+                    "Sales Invoice Item-rate-columns",
                 ],
             ]
         ],
