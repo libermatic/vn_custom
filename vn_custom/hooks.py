@@ -48,6 +48,8 @@ fixtures = [
                     "Sales Invoice-naming_series-options",
                     "Sales Invoice Item-qty-columns",
                     "Sales Invoice Item-rate-columns",
+                    "Purchase Invoice-update_stock-default",
+                    "Purchase Invoice-disable_rounded_total-default",
                 ],
             ]
         ],
