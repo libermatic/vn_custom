@@ -162,4 +162,4 @@ doc_events = {
 # Jinja Environment Customizations
 # --------------------------------
 
-jenv = {"methods": ["get_mrp:vn_custom.utils.jinja.get_mrp"]}
+# jenv = {"methods": ["get_mrp:vn_custom.utils.jinja.get_mrp"]}
