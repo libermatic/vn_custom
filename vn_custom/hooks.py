@@ -122,16 +122,9 @@ app_include_js = "/assets/js/vn_custom.min.js"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#     "Sales Invoice": {
-#         "on_submit": "vn_custom.doc_events.sales_invoice.on_submit",
-#         "on_cancel": "vn_custom.doc_events.sales_invoice.on_cancel",
-#     },
-#     "Delivery Note": {
-#         "on_submit": "vn_custom.doc_events.delivery_note.on_submit",
-#         "on_cancel": "vn_custom.doc_events.delivery_note.on_cancel",
-#     },
-# }
+doc_events = {
+    "Sales Invoice": {"on_update": "vn_custom.doc_events.sales_invoice.on_update"}
+}
 
 # Scheduled Tasks
 # ---------------
