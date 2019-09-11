@@ -1,12 +1,12 @@
 @page {
   size: 'A6';
-  margin: {{ page_margin or '5mm' }};
+  margin: {{ page_margin_vert or page_margin or '5mm' }} {{ page_margin_horz or page_margin or '5mm' }};
 }
 @media screen {
   .print-format {
     width: {{ page_width or '105mm' }};
     height: {{ page_height or '148mm' }};
-    padding: {{ page_margin or '5mm' }};
+    padding: {{ page_margin_vert or page_margin or '5mm' }} {{ page_margin_horz or page_margin or '5mm' }};
     max-width: {{ page_width or '105mm' }};
     min-height: {{ page_height or '148mm' }};
   }
@@ -21,7 +21,7 @@
   font-size: {{ base_font_size or '8pt' }};
   display: flex;
   flex-flow: column nowrap;
-  min-height: calc({{ page_height or '148mm' }} - {{ page_margin or '5mm' }} * 2);
+  min-height: calc({{ page_height or '148mm' }} - {{ page_margin_vert or page_margin or '5mm' }} * 2);
 }
 
 .vn-print h1 {
