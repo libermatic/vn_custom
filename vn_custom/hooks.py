@@ -46,6 +46,7 @@ fixtures = [
                     "Item Price-min_qty-in_list_view",
                     "Item Price-price_list-in_list_view",
                     "Sales Invoice-naming_series-options",
+                    "Sales Invoice-posting_date-in_list_view",
                     "Sales Invoice Item-qty-columns",
                     "Sales Invoice Item-rate-columns",
                     "Purchase Invoice-update_stock-default",
