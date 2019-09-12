@@ -278,5 +278,25 @@
   "property": "in_list_view",
   "property_type": "Check",
   "value": "1"
+ },
+ {
+  "_assign": null,
+  "_comments": null,
+  "_liked_by": null,
+  "_user_tags": null,
+  "default_value": null,
+  "doc_type": "Item Price",
+  "docstatus": 0,
+  "doctype": "Property Setter",
+  "doctype_or_field": "DocField",
+  "field_name": "uom",
+  "modified": "2019-09-13 00:23:55.684318",
+  "name": "Item Price-uom-in_list_view",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "property": "in_list_view",
+  "property_type": "Check",
+  "value": "1"
  }
 ]

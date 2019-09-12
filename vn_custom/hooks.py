@@ -42,6 +42,7 @@ fixtures = [
                     "Supplier-supplier_name-in_standard_filter",
                     "Item-naming_series-options",
                     "Item-item_name-in_standard_filter",
+                    "Item Price-uom-in_list_view",
                     "Item Price-min_qty-in_standard_filter",
                     "Item Price-min_qty-in_list_view",
                     "Item Price-price_list-in_list_view",
