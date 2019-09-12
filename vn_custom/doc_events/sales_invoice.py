@@ -9,7 +9,7 @@ from vn_custom.utils import pick
 def on_update(doc, method):
     for item in doc.items:
         if not item.vn_mrp or not item.vn_valuation:
-            prices = get_other_prices(item.item_code)
+            prices = get_other_prices(item.item_code, item.uom)
             item.update(pick(["vn_mrp", "vn_valuation"], prices))
 
 
