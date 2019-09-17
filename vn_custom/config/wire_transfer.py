@@ -6,6 +6,16 @@ from frappe import _
 def get_data():
     return [
         {
+            "label": _("Documents"),
+            "items": [
+                {
+                    "type": "doctype",
+                    "name": "Wire Account",
+                    "description": _("Wire Account"),
+                }
+            ],
+        },
+        {
             "label": _("Settings"),
             "items": [
                 {
