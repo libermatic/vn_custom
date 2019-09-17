@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/libermatic/vn_custom/issues"
   },
-  "homepage": "https://github.com/libermatic/vn_custom#readme"
+  "homepage": "https://github.com/libermatic/vn_custom#readme",
+  "dependencies": {
+    "lodash": "^4.17.15"
+  }
 }
