@@ -3,8 +3,21 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
-# import frappe
+import frappe
+from frappe import _
 from frappe.model.document import Document
+import requests
+
 
 class WireAccount(Document):
-	pass
+    def before_save(self):
+        self.ifsc = self.ifsc.upper()
+        if not self.bank or not self.branch:
+            try:
+                r = requests.get("https://ifsc.razorpay.com/{}".format(self.ifsc))
+                r.raise_for_status()
+                data = r.json()
+                self.bank = data.get("BANK")
+                self.branch = data.get("BRANCH")
+            except requests.exceptions.HTTPError:
+                frappe.throw(_("Invalid IFSC"))

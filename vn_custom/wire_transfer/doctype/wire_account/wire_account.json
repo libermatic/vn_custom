@@ -12,7 +12,7 @@
   "ifsc",
   "bank",
   "branch",
-  "data_8",
+  "column_break_8",
   "details_html"
  ],
  "fields": [
@@ -53,19 +53,21 @@
   {
    "fieldname": "bank",
    "fieldtype": "Data",
-   "label": "Bank"
+   "label": "Bank",
+   "read_only": 1
   },
   {
    "fieldname": "branch",
    "fieldtype": "Data",
-   "label": "Branch"
+   "label": "Branch",
+   "read_only": 1
   },
   {
-   "fieldname": "data_8",
-   "fieldtype": "Data"
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
   }
  ],
- "modified": "2019-09-17 20:06:39.769286",
+ "modified": "2019-09-17 20:49:20.732263",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Account",
