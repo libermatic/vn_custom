@@ -6,10 +6,12 @@ from frappe import _
 def get_data():
     return [
         {
-            "module_name": "VN Custom",
+            "module_name": "Wire Transfer",
+            "category": "Modules",
+            "label": _("Wire Transfer"),
             "color": "grey",
             "icon": "octicon octicon-file-directory",
             "type": "module",
-            "label": _("VN Custom"),
+            "description": "Wire Transfer",
         }
     ]
