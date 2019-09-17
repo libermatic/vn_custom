@@ -17,6 +17,7 @@ documents = {
 
 
 settings = {
+    "Buying Settings": {"supp_master_name": "Naming Series"},
     "Selling Settings": {"cust_master_name": "Naming Series"},
     "Stock Settings": {"item_naming_by": "Naming Series", "show_barcode_field": 1},
     "VN Settings": {"mrp_price_list": "MRP"},
