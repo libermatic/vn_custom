@@ -17,7 +17,7 @@ class WireAccount(Document):
                 r = requests.get("https://ifsc.razorpay.com/{}".format(self.ifsc))
                 r.raise_for_status()
                 data = r.json()
-                self.bank = data.get("BANK")
-                self.branch = data.get("BRANCH")
+                self.bank = self.bank or data.get("BANK")
+                self.branch = self.branch or data.get("BRANCH")
             except requests.exceptions.HTTPError:
                 frappe.throw(_("Invalid IFSC"))

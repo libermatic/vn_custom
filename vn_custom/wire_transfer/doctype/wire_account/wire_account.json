@@ -6,13 +6,12 @@
  "engine": "InnoDB",
  "field_order": [
   "account_no",
-  "column_break_2",
   "account_name",
   "details_section",
   "ifsc",
   "bank",
   "branch",
-  "column_break_8",
+  "column_break_7",
   "details_html"
  ],
  "fields": [
@@ -47,27 +46,23 @@
    "fieldtype": "HTML"
   },
   {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
+   "depends_on": "ifsc",
    "fieldname": "bank",
    "fieldtype": "Data",
-   "label": "Bank",
-   "read_only": 1
+   "label": "Bank"
   },
   {
+   "depends_on": "ifsc",
    "fieldname": "branch",
    "fieldtype": "Data",
-   "label": "Branch",
-   "read_only": 1
+   "label": "Branch"
   },
   {
-   "fieldname": "column_break_8",
+   "fieldname": "column_break_7",
    "fieldtype": "Column Break"
   }
  ],
- "modified": "2019-09-17 20:49:20.732263",
+ "modified": "2019-09-18 13:38:15.096583",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Account",
