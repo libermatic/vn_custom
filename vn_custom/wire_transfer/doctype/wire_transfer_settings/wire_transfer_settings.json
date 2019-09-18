@@ -4,7 +4,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "cash_account"
+  "cash_account",
+  "transit_account",
+  "column_break_3"
  ],
  "fields": [
   {
@@ -12,10 +14,20 @@
    "fieldtype": "Link",
    "label": "Cash Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "transit_account",
+   "fieldtype": "Link",
+   "label": "Transit Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
   }
  ],
  "issingle": 1,
- "modified": "2019-09-17 18:00:49.400111",
+ "modified": "2019-09-18 18:59:12.274300",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer Settings",

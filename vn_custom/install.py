@@ -4,24 +4,46 @@ import frappe
 from frappe import _
 from toolz import merge
 
-documents = {
-    "Price List": [
-        {
-            "price_list_name": "MRP",
-            "currency": frappe.defaults.get_global_default("currency"),
-            "enabled": 1,
-            "selling": 1,
-        }
-    ]
-}
+
+def documents():
+    return {
+        "Price List": [
+            {
+                "price_list_name": "MRP",
+                "currency": frappe.defaults.get_global_default("currency"),
+                "enabled": 1,
+                "selling": 1,
+            }
+        ],
+        "Account": [
+            {
+                "is_group": 0,
+                "company": frappe.defaults.get_global_default("company"),
+                "account_name": "Transfer Transit",
+                "parent_account": frappe.db.exists(
+                    "Account",
+                    {
+                        "company": frappe.defaults.get_global_default("company"),
+                        "account_name": "Accounts Payable",
+                    },
+                ),
+            }
+        ],
+    }
 
 
-settings = {
-    "Buying Settings": {"supp_master_name": "Naming Series"},
-    "Selling Settings": {"cust_master_name": "Naming Series"},
-    "Stock Settings": {"item_naming_by": "Naming Series", "show_barcode_field": 1},
-    "VN Settings": {"mrp_price_list": "MRP"},
-}
+def settings():
+    return {
+        "Buying Settings": {"supp_master_name": "Naming Series"},
+        "Selling Settings": {"cust_master_name": "Naming Series"},
+        "Stock Settings": {"item_naming_by": "Naming Series", "show_barcode_field": 1},
+        "VN Settings": {"mrp_price_list": "MRP"},
+        "Wire Transfer Settings": {
+            "transit_account": frappe.db.exists(
+                "Account", {"account_name": "Transfer Transit"}
+            )
+        },
+    }
 
 
 @frappe.whitelist()
@@ -38,7 +60,7 @@ def _update_settings():
         doc.update(params)
         doc.save(ignore_permissions=True)
 
-    for x in settings.items():
+    for x in settings().items():
         update(*x)
 
 
@@ -49,6 +71,6 @@ def _create_docs():
                 ignore_permissions=True
             )
 
-    for doctype, docs in documents.items():
+    for doctype, docs in documents().items():
         for doc in docs:
             insert(doctype, doc)
