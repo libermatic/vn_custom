@@ -46,12 +46,80 @@ def settings():
     }
 
 
+def workflows():
+    return {
+        "Wire Transfer Workflow": {
+            "document_type": "Wire Transfer",
+            "is_active": 1,
+            "send_email_alert": 0,
+            "workflow_state_field": "workflow_state",
+            "states": [
+                {
+                    "state": "Draft",
+                    "style": "Danger",
+                    "doc_status": "0",
+                    "allow_edit": "Accounts User",
+                },
+                {
+                    "state": "Pending",
+                    "style": "Warning",
+                    "doc_status": "1",
+                    "allow_edit": "Accounts User",
+                },
+                {
+                    "state": "Completed",
+                    "style": "Success",
+                    "doc_status": "1",
+                    "allow_edit": "Accounts User",
+                },
+                {
+                    "state": "Cancelled",
+                    "style": "Danger",
+                    "doc_status": "2",
+                    "allow_edit": "Accounts User",
+                },
+            ],
+            "transitions": [
+                {
+                    "state": "Draft",
+                    "action": "Submit",
+                    "next_state": "Pending",
+                    "allowed": "Accounts User",
+                    "allow_self_approval": 1,
+                },
+                {
+                    "state": "Pending",
+                    "action": "Cancel",
+                    "next_state": "Cancelled",
+                    "allowed": "Accounts User",
+                    "allow_self_approval": 1,
+                },
+                {
+                    "state": "Pending",
+                    "action": "Transfer",
+                    "next_state": "Completed",
+                    "allowed": "Accounts User",
+                    "allow_self_approval": 1,
+                },
+                {
+                    "state": "Completed",
+                    "action": "Cancel",
+                    "next_state": "Cancelled",
+                    "allowed": "Accounts User",
+                    "allow_self_approval": 1,
+                },
+            ],
+        }
+    }
+
+
 @frappe.whitelist()
 def setup_defaults():
     if frappe.session.user != "Administrator":
         frappe.throw(_("Only allowed for Administrator"))
     _create_docs()
     _update_settings()
+    _setup_workflow()
 
 
 def _update_settings():
@@ -74,3 +142,54 @@ def _create_docs():
     for doctype, docs in documents().items():
         for doc in docs:
             insert(doctype, doc)
+
+
+def _setup_workflow():
+    def make_action(name):
+        if not frappe.db.exists("Workflow Action Master", name):
+            frappe.get_doc(
+                {"doctype": "Workflow Action Master", "workflow_action_name": name}
+            ).insert(ignore_permissions=True)
+
+    def make_state(name, style=None):
+        if not frappe.db.exists("Workflow State", name):
+            frappe.get_doc(
+                {
+                    "doctype": "Workflow State",
+                    "workflow_state_name": name,
+                    "style": style,
+                }
+            ).insert(ignore_permissions=True)
+        else:
+            doc = frappe.get_doc("Workflow State", name)
+            doc.update({"style": style})
+            doc.save(ignore_permissions=True)
+
+    def make_role(name, desk_access=1):
+        if not frappe.db.exists("Role", name):
+            frappe.get_doc(
+                {"doctype": "Role", "role_name": name, "desk_access": desk_access}
+            ).insert(ignore_permissions=True)
+
+    def make_workflow(name, args):
+        if args.get("transitions"):
+            for x in args.get("transitions"):
+                make_action(x.get("action"))
+
+        if args.get("states"):
+            for x in args.get("states"):
+                make_state(x.get("state"), x.get("style"))
+            for x in args.get("states"):
+                make_role(x.get("allow_edit"))
+
+        if not frappe.db.exists("Workflow", name):
+            frappe.get_doc(
+                merge({"doctype": "Workflow", "workflow_name": name}, args)
+            ).insert(ignore_permissions=True)
+        else:
+            doc = frappe.get_doc("Workflow", name)
+            doc.update(args)
+            doc.save(ignore_permissions=True)
+
+    for x in workflows().items():
+        make_workflow(*x)
