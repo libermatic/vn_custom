@@ -4,6 +4,8 @@ import frappe
 from frappe import _
 from toolz import merge
 
+from vn_custom.utils import mapr
+
 
 def documents():
     return {
@@ -128,8 +130,7 @@ def _update_settings():
         doc.update(params)
         doc.save(ignore_permissions=True)
 
-    for x in settings().items():
-        update(*x)
+    mapr(lambda x: update(*x), settings().items())
 
 
 def _create_docs():
@@ -140,8 +141,7 @@ def _create_docs():
             )
 
     for doctype, docs in documents().items():
-        for doc in docs:
-            insert(doctype, doc)
+        mapr(lambda x: insert(doctype, x), docs)
 
 
 def _setup_workflow():
@@ -173,14 +173,13 @@ def _setup_workflow():
 
     def make_workflow(name, args):
         if args.get("transitions"):
-            for x in args.get("transitions"):
-                make_action(x.get("action"))
+            mapr(lambda x: make_action(x.get("action")), args.get("transitions"))
 
         if args.get("states"):
-            for x in args.get("states"):
-                make_state(x.get("state"), x.get("style"))
-            for x in args.get("states"):
-                make_role(x.get("allow_edit"))
+            mapr(
+                lambda x: make_state(x.get("state"), x.get("style")), args.get("states")
+            )
+            mapr(lambda x: make_role(x.get("allow_edit")), args.get("states"))
 
         if not frappe.db.exists("Workflow", name):
             frappe.get_doc(
@@ -191,5 +190,4 @@ def _setup_workflow():
             doc.update(args)
             doc.save(ignore_permissions=True)
 
-    for x in workflows().items():
-        make_workflow(*x)
+    mapr(lambda x: make_workflow(*x), workflows().items())
