@@ -10,9 +10,14 @@ def get_data():
             "items": [
                 {
                     "type": "doctype",
+                    "name": "Wire Transfer",
+                    "description": _("Wire Transfer"),
+                },
+                {
+                    "type": "doctype",
                     "name": "Wire Account",
                     "description": _("Wire Account"),
-                }
+                },
             ],
         },
         {
