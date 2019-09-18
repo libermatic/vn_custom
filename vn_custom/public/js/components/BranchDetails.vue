@@ -5,6 +5,18 @@
   </div>
   <div v-else class="root">
     <dl class="width-full">
+      <dt>Bank</dt>
+      <dd>{{ bank }}</dd>
+    </dl>
+    <dl>
+      <dt>Branch</dt>
+      <dd>{{ branch }}</dd>
+    </dl>
+    <dl v-if="micr">
+      <dt>MICR</dt>
+      <dd>{{ micr }}</dd>
+    </dl>
+    <dl class="width-full">
       <dt>Address</dt>
       <dd>{{ address || '-' }}</dd>
     </dl>
@@ -24,11 +36,7 @@
       <dt>Contact</dt>
       <dd>{{ contact || '-' }}</dd>
     </dl>
-    <dl v-if="micr" class="width-full">
-      <dt>MICR</dt>
-      <dd>{{ micr }}</dd>
-    </dl>
-    <dl>
+    <dl class="width-full">
       <dt>Services</dt>
       <dd>
         <span :class="{ badge: true, enabled: imps }">IMPS</span>
