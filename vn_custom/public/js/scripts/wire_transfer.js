@@ -6,10 +6,12 @@ function set_total(frm) {
 async function set_default_fields(frm) {
   if (frm.doc.__islocal) {
     frm.set_value('request_datetime', frappe.datetime.now_datetime());
-    const { message: { cash_account, bank_account } = {} } = await frappe.call({
-      method: 'vn_custom.api.wire_transfer.get_default_accounts',
-    });
-    console.log(cash_account, bank_account);
+    const {
+      message: { cash_account, bank_account } = {},
+    } = await frappe.db.get_value('Wire Transfer Settings', null, [
+      'cash_account',
+      'bank_account',
+    ]);
     frm.set_value({ cash_account, bank_account });
   }
 }
