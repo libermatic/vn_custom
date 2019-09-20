@@ -1,4 +1,5 @@
 {
+ "allow_rename": 1,
  "autoname": "field:account_no",
  "creation": "2019-09-17 19:00:22.854322",
  "doctype": "DocType",
@@ -62,7 +63,7 @@
    "fieldtype": "Column Break"
   }
  ],
- "modified": "2019-09-18 13:38:15.096583",
+ "modified": "2019-09-18 16:54:05.299813",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Account",

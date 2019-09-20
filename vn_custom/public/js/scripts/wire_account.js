@@ -36,12 +36,11 @@ const d = {
   IFSC: 'HDFC0001999',
 };
 
-async function set_details(frm) {
+export async function set_details(frm) {
   function reset_values() {
     DETAILS_FIELDS.forEach(field => {
       frm.vue_details[field] = null;
     });
-    frm.set_value({ bank: null, branch: null });
   }
 
   const { ifsc } = frm.doc;
@@ -65,10 +64,12 @@ async function set_details(frm) {
   DETAILS_FIELDS.forEach(field => {
     frm.vue_details[field] = data_transformed[field];
   });
-  return frm.set_value({
-    bank: data_transformed.bank,
-    branch: data_transformed.branch,
-  });
+  return data_transformed;
+}
+
+async function set_details_and_values(frm) {
+  const { bank, branch } = (await set_details(frm)) || {};
+  return frm.set_value({ bank, branch });
 }
 
 function render_details(frm) {
@@ -90,8 +91,13 @@ function render_details(frm) {
 
 export default {
   onload: function(frm) {
-    frm.vue_details = render_details(frm);
+    const { $wrapper } = frm.get_field('details_html');
+    $wrapper.empty();
+    frm.vue_details = render_details(
+      frm,
+      $wrapper.html('<div />').children()[0]
+    );
   },
-  refresh: set_details,
-  ifsc: set_details,
+  refresh: set_details_and_values,
+  ifsc: set_details_and_values,
 };
