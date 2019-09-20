@@ -115,3 +115,18 @@ class WireTransfer(AccountsController):
             return getdate(self.request_datetime)
         elif self.workflow_state == "Completed":
             return getdate(self.transfer_datetime)
+
+    def set_fees(self):
+        settings = frappe.get_single("Wire Transfer Settings")
+        for rule in settings.fees_rules:
+            eval_globals = {"ceil": frappe.utils.ceil}
+            eval_locals = self.as_dict()
+            if not rule.condition or frappe.safe_eval(
+                rule.condition, eval_locals=eval_locals
+            ):
+                self.fees = frappe.safe_eval(
+                    rule.formula, eval_globals=eval_globals, eval_locals=eval_locals
+                )
+                return self.fees
+        self.fees = 0
+        return self.fees

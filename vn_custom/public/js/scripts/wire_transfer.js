@@ -45,7 +45,17 @@ export default {
     set_default_fields(frm);
     render_dashboard(frm);
   },
-  amount: set_total,
+  amount: async function(frm) {
+    const { amount = 0 } = frm.doc;
+    try {
+      if (amount) {
+        await frappe.call({ method: 'set_fees', doc: frm.doc });
+        frm.refresh();
+      }
+    } finally {
+      set_total(frm);
+    }
+  },
   fees: set_total,
   after_workflow_action: function(frm) {
     frm.reload_doc();
