@@ -5,6 +5,7 @@ import camelCase from 'lodash/camelCase';
 import BranchDetails from '../components/BranchDetails.vue';
 
 const DETAILS_FIELDS = [
+  'ifsc',
   'bank',
   'branch',
   'micr',
@@ -17,24 +18,6 @@ const DETAILS_FIELDS = [
   'rtgs',
   'neft',
 ];
-
-const d = {
-  STATE: 'MANIPUR',
-  IMPS: true,
-  RTGS: true,
-  BRANCH: 'IMPHAL',
-  NEFT: true,
-  CITY: 'IMPHAL',
-  DISTRICT: 'IMPHAL',
-  CONTACT: '8003453333',
-  MICR: '795240002',
-  CENTRE: 'IMPHAL',
-  ADDRESS:
-    'IMPHAL HDFC BANK LTD TAMPHA EBEMA BUILDING, GANDHI AVENUE PIN 795001',
-  BANK: 'HDFC Bank',
-  BANKCODE: 'HDFC',
-  IFSC: 'HDFC0001999',
-};
 
 export async function set_details(frm) {
   function reset_values() {
@@ -72,18 +55,16 @@ async function set_details_and_values(frm) {
   return frm.set_value({ bank, branch });
 }
 
-function render_details(frm) {
-  const { $wrapper } = frm.get_field('details_html');
-  $wrapper.empty();
+export function render_details(frm, el, isExtended = false) {
   return new Vue({
     data: Object.assign(
-      { isLoading: false },
+      { isLoading: false, isExtended },
       ...DETAILS_FIELDS.map(field => ({ [field]: null }))
     ),
-    el: $wrapper.html('<div />').children()[0],
+    el,
     render: function(h) {
       return h(BranchDetails, {
-        props: pick(this, ['isLoading', ...DETAILS_FIELDS]),
+        props: pick(this, ['isLoading', 'isExtended', ...DETAILS_FIELDS]),
       });
     },
   });

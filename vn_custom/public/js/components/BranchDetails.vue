@@ -12,6 +12,10 @@
       <dt>Branch</dt>
       <dd>{{ branch }}</dd>
     </dl>
+    <dl v-if="isExtended">
+      <dt>IFSC</dt>
+      <dd>{{ ifsc }}</dd>
+    </dl>
     <dl v-if="micr">
       <dt>MICR</dt>
       <dd>{{ micr }}</dd>
@@ -53,6 +57,8 @@ export default {
   components: { LoadingIndicator },
   props: {
     isLoading: { type: Boolean, default: false },
+    isExtended: { type: Boolean, default: false },
+    ifsc: { type: String, default: null },
     bank: { type: String, default: null },
     branch: { type: String, default: null },
     micr: { type: String, default: null },
@@ -78,10 +84,10 @@ export default {
   display: flex;
   flex-flow: row wrap;
   > dl {
-    margin: 0 1em 1em;
+    font-size: 12px;
+    margin: 0 1em 0.5em;
   }
   dt {
-    font-size: 12px;
     font-weight: normal;
     color: #8d99a6;
   }

@@ -7,6 +7,7 @@
  "field_order": [
   "account",
   "account_holder",
+  "ifsc",
   "sender_name",
   "column_break_4",
   "request_datetime",
@@ -132,10 +133,16 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fetch_from": "account.ifsc",
+   "fieldname": "ifsc",
+   "fieldtype": "Data",
+   "hidden": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2019-09-20 02:26:52.958310",
+ "modified": "2019-09-21 00:11:24.787536",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",

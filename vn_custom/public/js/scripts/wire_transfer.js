@@ -1,3 +1,5 @@
+import { set_details, render_details } from './wire_account';
+
 function set_total(frm) {
   const { amount = 0, fees = 0 } = frm.doc;
   frm.set_value('total', amount + fees);
@@ -16,6 +18,21 @@ async function set_default_fields(frm) {
   }
 }
 
+function render_dashboard(frm) {
+  if (frm.doc.docstatus > 0) {
+    frm.dashboard.show();
+    const $wrapper = $(
+      '<div class="form-dashboard-section custom" />'
+    ).appendTo(frm.dashboard.wrapper);
+    frm.vue_details = render_details(
+      frm,
+      $wrapper.html('<div />').children()[0],
+      true /* isExtended */
+    );
+    set_details(frm);
+  }
+}
+
 export default {
   refresh: function(frm) {
     frm.toggle_reqd('request_datetime', frm.doc.docstatus < 1);
@@ -26,6 +43,7 @@ export default {
     frm.set_query('cash_account', { account_type: 'Cash', is_group: 0 });
     frm.set_query('bank_account', { account_type: 'Bank', is_group: 0 });
     set_default_fields(frm);
+    render_dashboard(frm);
   },
   amount: set_total,
   fees: set_total,
