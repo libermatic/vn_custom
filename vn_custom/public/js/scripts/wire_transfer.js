@@ -19,10 +19,17 @@ async function set_default_fields(frm) {
 export default {
   refresh: function(frm) {
     frm.toggle_reqd('request_datetime', frm.doc.docstatus < 1);
+    frm.toggle_enable(
+      ['transfer_datetime', 'bank_account', 'transaction_id'],
+      frm.doc.workflow_state !== 'Completed'
+    );
     frm.set_query('cash_account', { account_type: 'Cash', is_group: 0 });
     frm.set_query('bank_account', { account_type: 'Bank', is_group: 0 });
     set_default_fields(frm);
   },
   amount: set_total,
   fees: set_total,
+  after_workflow_action: function(frm) {
+    frm.reload_doc();
+  },
 };

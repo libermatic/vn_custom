@@ -85,7 +85,7 @@ def workflows():
             "transitions": [
                 {
                     "state": "Draft",
-                    "action": "Submit",
+                    "action": "Accept",
                     "next_state": "Pending",
                     "allowed": "Accounts User",
                     "allow_self_approval": 1,
