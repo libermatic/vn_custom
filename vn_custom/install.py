@@ -31,6 +31,7 @@ def documents():
                 ),
             }
         ],
+        "Party Type": [{"party_type": "Wire Account", "account_type": "Payable"}],
     }
 
 
@@ -134,14 +135,19 @@ def _update_settings():
 
 
 def _create_docs():
-    def insert(doctype, args):
-        if not frappe.db.exists(doctype, args):
+    def insert_or_update(doctype, args):
+        docname = frappe.db.exists(doctype, args)
+        if not docname:
             frappe.get_doc(merge({"doctype": doctype}, args)).insert(
                 ignore_permissions=True
             )
+        else:
+            doc = frappe.get_doc(doctype, docname)
+            doc.update(args)
+            doc.save(ignore_permissions=True)
 
     for doctype, docs in documents().items():
-        mapr(lambda x: insert(doctype, x), docs)
+        mapr(lambda x: insert_or_update(doctype, x), docs)
 
 
 def _setup_workflow():
