@@ -9,7 +9,9 @@
   "column_break_3",
   "transit_account",
   "income_account",
-  "cost_center"
+  "cost_center",
+  "fees_calculation_section",
+  "fees_rules"
  ],
  "fields": [
   {
@@ -53,10 +55,21 @@
    "label": "Income Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "fieldname": "fees_calculation_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Higher rules in the table take precedence. A catch-all rule could be placed last. Otherwise, calculations would yield zero.",
+   "fieldname": "fees_rules",
+   "fieldtype": "Table",
+   "label": "Fees Rules",
+   "options": "Wire Transfer Settings Fees Rule"
   }
  ],
  "issingle": 1,
- "modified": "2019-09-20 01:25:26.312862",
+ "modified": "2019-09-21 00:54:08.037186",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer Settings",

@@ -1,0 +1,36 @@
+{
+ "creation": "2019-09-21 00:50:31.053892",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "condition",
+  "formula"
+ ],
+ "fields": [
+  {
+   "fieldname": "condition",
+   "fieldtype": "Code",
+   "in_list_view": 1,
+   "label": "Condition"
+  },
+  {
+   "fieldname": "formula",
+   "fieldtype": "Code",
+   "in_list_view": 1,
+   "label": "Formula",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "modified": "2019-09-21 00:50:31.053892",
+ "modified_by": "Administrator",
+ "module": "Wire Transfer",
+ "name": "Wire Transfer Settings Fees Rule",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
