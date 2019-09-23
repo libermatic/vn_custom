@@ -1,0 +1,66 @@
+<div class="vn-print">
+  {%- if not no_letterhead and letter_head-%}
+  <header>{{ letter_head }}</header>
+  {%- endif -%}
+  <h1>
+    <span class="vn-strong">RECEIPT</span>
+    &middot;
+    <span>{{ doc.name }}</span>
+    &middot;
+    <span class="vn-text-smaller"
+      >{{ frappe.utils.getdate(doc.request_datetime).strftime('%d-%m-%Y')
+      }}</span
+    >
+  </h1>
+  <main class="vn-details">
+    <div class="vn-no-shrink">
+      <svg
+        class="barcode"
+        jsbarcode-format="CODE128"
+        jsbarcode-value="{{ doc.name }}"
+        jsbarcode-displayvalue="false"
+        jsbarcode-height="25"
+        jsbarcode-width="1"
+        jsbarcode-margin="10"
+      />
+    </div>
+    <div class="vn-content vn-fill">
+      <dl>
+        <dt>Account #</dt>
+        <dd>{{ doc.account }}</dd>
+      </dl>
+      {%- if doc.account_holder -%}
+      <dl>
+        <dt>Name</dt>
+        <dd>{{ doc.account_holder }}</dd>
+      </dl>
+      {%- endif -%}
+    </div>
+  </main>
+  <section class="vn-summary">
+    <dl>
+      <dt>Amount</dt>
+      <dd>{{ doc.get_formatted('amount') }}</dd>
+    </dl>
+    <dl>
+      <dt>Fees</dt>
+      <dd>{{ doc.get_formatted('fees') }}</dd>
+    </dl>
+    <dl class="vn-overline">
+      <dt>Total</dt>
+      <dd class="vn-strong">{{ doc.get_formatted('total') }}</dd>
+    </dl>
+  </section>
+  <div class="vn-fill"></div>
+  {%- if not no_letterhead and footer-%}
+  <footer>{{ footer }}</footer>
+  {%- endif -%}
+</div>
+
+<script
+  type="text/javascript"
+  src="/assets/js/libermatic_print.min.js"
+></script>
+<script type="text/javascript">
+  JsBarcode('.barcode').init();
+</script>

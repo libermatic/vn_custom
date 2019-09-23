@@ -102,13 +102,15 @@
    "fieldname": "amount",
    "fieldtype": "Currency",
    "label": "Amount",
+   "options": "Company:company:default_currency",
    "reqd": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "fees",
    "fieldtype": "Currency",
-   "label": "Fees"
+   "label": "Fees",
+   "options": "Company:company:default_currency"
   },
   {
    "fieldname": "column_break_11",
@@ -119,6 +121,7 @@
    "fieldname": "total",
    "fieldtype": "Currency",
    "label": "Total",
+   "options": "Company:company:default_currency",
    "read_only": 1
   },
   {
@@ -147,7 +150,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2019-09-23 23:25:20.547214",
+ "modified": "2019-09-23 23:55:25.726535",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",
