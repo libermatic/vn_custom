@@ -65,6 +65,12 @@ def workflows():
                 },
                 {
                     "state": "Pending",
+                    "style": "Info",
+                    "doc_status": "1",
+                    "allow_edit": "Accounts User",
+                },
+                {
+                    "state": "Unpaid",
                     "style": "Warning",
                     "doc_status": "1",
                     "allow_edit": "Accounts User",
@@ -91,6 +97,13 @@ def workflows():
                     "allow_self_approval": 1,
                 },
                 {
+                    "state": "Draft",
+                    "action": "Transfer",
+                    "next_state": "Unpaid",
+                    "allowed": "Accounts User",
+                    "allow_self_approval": 1,
+                },
+                {
                     "state": "Pending",
                     "action": "Cancel",
                     "next_state": "Cancelled",
@@ -100,6 +113,20 @@ def workflows():
                 {
                     "state": "Pending",
                     "action": "Transfer",
+                    "next_state": "Completed",
+                    "allowed": "Accounts User",
+                    "allow_self_approval": 1,
+                },
+                {
+                    "state": "Unpaid",
+                    "action": "Cancel",
+                    "next_state": "Cancelled",
+                    "allowed": "Accounts User",
+                    "allow_self_approval": 1,
+                },
+                {
+                    "state": "Unpaid",
+                    "action": "Accept",
                     "next_state": "Completed",
                     "allowed": "Accounts User",
                     "allow_self_approval": 1,

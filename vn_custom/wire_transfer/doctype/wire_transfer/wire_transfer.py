@@ -14,27 +14,22 @@ from toolz import merge
 from vn_custom.utils import mapr
 
 
+ACCEPT = "Accept"
+TRANSFER = "Transfer"
+
+
 class WireTransfer(AccountsController):
     def validate(self):
-        if (
-            self.request_datetime
-            and self.transfer_datetime
-            and get_datetime(self.request_datetime)
-            > get_datetime(self.transfer_datetime)
-        ):
-            frappe.throw(_("Request Datetime cannot be after Transfer Datetime"))
+        pass
 
     def before_submit(self):
-        self.total = flt(self.amount) + flt(self.fees)
-        if not self.request_datetime:
-            self.request_datetime = get_datetime()
+        self._set_missing_fields()
 
     def on_submit(self):
         self.make_gl_entry()
 
     def before_update_after_submit(self):
-        if self.workflow_state == "Completed" and not self.transfer_datetime:
-            self.transfer_datetime = get_datetime()
+        self._set_missing_fields()
 
     def on_update_after_submit(self):
         self.make_gl_entry()
@@ -44,7 +39,7 @@ class WireTransfer(AccountsController):
 
     def make_gl_entry(self):
         settings = frappe.get_single("Wire Transfer Settings")
-        if self.workflow_state == "Pending":
+        if self.workflow_action == ACCEPT:
             make_gl_entries(
                 mapr(
                     self.get_gl_dict,
@@ -68,7 +63,7 @@ class WireTransfer(AccountsController):
                     ],
                 )
             )
-        elif self.workflow_state == "Completed":
+        elif self.workflow_action == TRANSFER:
             remarks = (
                 "Transaction reference no {} dated {}".format(
                     self.transaction_id, getdate(self.transfer_datetime)
@@ -110,10 +105,19 @@ class WireTransfer(AccountsController):
             )
         )
 
+    def _set_missing_fields(self):
+        self.total = flt(self.amount) + flt(self.fees)
+        if not self.get("workflow_action"):
+            self.workflow_action = None
+        if self.workflow_action == ACCEPT and not self.request_datetime:
+            self.request_datetime = get_datetime()
+        elif self.workflow_action == TRANSFER and not self.transfer_datetime:
+            self.transfer_datetime = get_datetime()
+
     def _get_posting_date(self):
-        if self.workflow_state == "Pending":
+        if self.workflow_action == ACCEPT:
             return getdate(self.request_datetime)
-        elif self.workflow_state == "Completed":
+        elif self.workflow_action == TRANSFER:
             return getdate(self.transfer_datetime)
 
     def set_fees(self):

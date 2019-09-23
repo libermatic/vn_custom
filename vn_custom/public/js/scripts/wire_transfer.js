@@ -7,7 +7,6 @@ function set_total(frm) {
 
 async function set_default_fields(frm) {
   if (frm.doc.__islocal) {
-    frm.set_value('request_datetime', frappe.datetime.now_datetime());
     const {
       message: { cash_account, bank_account } = {},
     } = await frappe.db.get_value('Wire Transfer Settings', null, [
@@ -35,10 +34,13 @@ function render_dashboard(frm) {
 
 export default {
   refresh: function(frm) {
-    frm.toggle_reqd('request_datetime', frm.doc.docstatus < 1);
+    frm.toggle_enable(
+      ['request_datetime', 'fees', 'cash_account'],
+      frm.doc.__islocal || frm.doc.workflow_state === 'Unpaid'
+    );
     frm.toggle_enable(
       ['transfer_datetime', 'bank_account', 'transaction_id'],
-      frm.doc.workflow_state !== 'Completed'
+      frm.doc.__islocal || frm.doc.workflow_state === 'Pending'
     );
     frm.set_query('cash_account', { account_type: 'Cash', is_group: 0 });
     frm.set_query('bank_account', { account_type: 'Bank', is_group: 0 });
@@ -57,6 +59,9 @@ export default {
     }
   },
   fees: set_total,
+  before_workflow_action: function(frm) {
+    frm.doc.workflow_action = frm.selected_workflow_action;
+  },
   after_workflow_action: function(frm) {
     frm.reload_doc();
   },
