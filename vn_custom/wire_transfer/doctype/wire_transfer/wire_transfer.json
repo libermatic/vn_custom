@@ -150,13 +150,15 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2019-09-23 23:55:25.726535",
+ "modified": "2019-09-24 00:15:48.829009",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",
  "owner": "Administrator",
  "permissions": [
   {
+   "amend": 1,
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -166,9 +168,12 @@
    "report": 1,
    "role": "Accounts Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
+   "amend": 1,
+   "cancel": 1,
    "create": 1,
    "email": 1,
    "export": 1,
@@ -177,6 +182,7 @@
    "report": 1,
    "role": "Accounts User",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],
