@@ -91,7 +91,7 @@
    "allow_on_submit": 1,
    "fieldname": "cash_account",
    "fieldtype": "Link",
-   "label": "Cash Account",
+   "label": "Receipt Account",
    "options": "Account",
    "reqd": 1
   },

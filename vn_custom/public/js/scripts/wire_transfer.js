@@ -33,17 +33,22 @@ function render_dashboard(frm) {
 }
 
 export default {
+  setup: function(frm) {
+    frm.set_query('cash_account', {
+      account_type: ['in', ['Cash', 'Bank']],
+      is_group: 0,
+    });
+    frm.set_query('bank_account', { account_type: 'Bank', is_group: 0 });
+  },
   refresh: function(frm) {
     frm.toggle_enable(
       ['request_datetime', 'fees', 'cash_account'],
-      frm.doc.__islocal || frm.doc.workflow_state === 'Unpaid'
+      frm.doc.docstatus === 0 || frm.doc.workflow_state === 'Unpaid'
     );
     frm.toggle_enable(
       ['transfer_datetime', 'bank_account', 'transaction_id'],
-      frm.doc.__islocal || frm.doc.workflow_state === 'Pending'
+      frm.doc.docstatus === 0 || frm.doc.workflow_state === 'Pending'
     );
-    frm.set_query('cash_account', { account_type: 'Cash', is_group: 0 });
-    frm.set_query('bank_account', { account_type: 'Bank', is_group: 0 });
     set_default_fields(frm);
     render_dashboard(frm);
   },
