@@ -25,20 +25,31 @@
       />
     </div>
     <div class="vn-content vn-fill">
+      {%- if doc.sender_name -%}
       <dl>
-        <dt>Account #</dt>
-        <dd>{{ doc.account }}</dd>
+        <dt>Sender Name</dt>
+        <dd>{{ doc.sender_name }}</dd>
       </dl>
-      {%- if doc.account_holder -%}
+      {%- endif -%} {%- if doc.sender_mobile -%}
       <dl>
-        <dt>Name</dt>
-        <dd>{{ doc.account_holder }}</dd>
+        <dt>Sender Mobile</dt>
+        <dd>{{ doc.sender_mobile }}</dd>
       </dl>
       {%- endif -%}
     </div>
   </main>
   <section class="vn-summary">
     <dl>
+      <dt>Account #</dt>
+      <dd>{{ doc.account }}</dd>
+    </dl>
+    {%- if doc.account_holder -%}
+    <dl>
+      <dt>Name</dt>
+      <dd>{{ doc.account_holder }}</dd>
+    </dl>
+    {%- endif -%}
+    <dl class="vn-overline">
       <dt>Amount</dt>
       <dd>{{ doc.get_formatted('amount') }}</dd>
     </dl>

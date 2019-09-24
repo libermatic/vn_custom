@@ -9,6 +9,7 @@
   "account_holder",
   "ifsc",
   "sender_name",
+  "sender_mobile",
   "column_break_4",
   "request_datetime",
   "transfer_datetime",
@@ -147,10 +148,16 @@
    "fieldname": "ifsc",
    "fieldtype": "Data",
    "hidden": 1
+  },
+  {
+   "fieldname": "sender_mobile",
+   "fieldtype": "Data",
+   "label": "Sender Mobile",
+   "options": "Phone"
   }
  ],
  "is_submittable": 1,
- "modified": "2019-09-24 00:15:48.829009",
+ "modified": "2019-09-24 22:06:41.931081",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",
