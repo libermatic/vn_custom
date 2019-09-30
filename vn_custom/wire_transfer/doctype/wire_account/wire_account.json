@@ -24,7 +24,7 @@
    "unique": 1
   },
   {
-   "bold": 1,
+   "allow_in_quick_entry": 1,
    "fieldname": "account_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -37,23 +37,21 @@
    "label": "Bank Details"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "ifsc",
    "fieldtype": "Data",
-   "label": "IFSC",
-   "reqd": 1
+   "label": "IFSC"
   },
   {
    "fieldname": "details_html",
    "fieldtype": "HTML"
   },
   {
-   "depends_on": "ifsc",
    "fieldname": "bank",
    "fieldtype": "Data",
    "label": "Bank"
   },
   {
-   "depends_on": "ifsc",
    "fieldname": "branch",
    "fieldtype": "Data",
    "label": "Branch"
@@ -63,7 +61,7 @@
    "fieldtype": "Column Break"
   }
  ],
- "modified": "2019-09-18 16:54:05.299813",
+ "modified": "2019-09-30 22:24:29.280845",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Account",

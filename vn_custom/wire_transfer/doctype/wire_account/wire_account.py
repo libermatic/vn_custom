@@ -11,8 +11,9 @@ import requests
 
 class WireAccount(Document):
     def before_save(self):
-        self.ifsc = self.ifsc.upper()
-        if not self.bank or not self.branch:
+        if self.ifsc:
+            self.ifsc = self.ifsc.upper()
+        if self.ifsc and (not self.bank or not self.branch):
             try:
                 r = requests.get("https://ifsc.razorpay.com/{}".format(self.ifsc))
                 r.raise_for_status()

@@ -51,8 +51,14 @@ export async function set_details(frm) {
 }
 
 async function set_details_and_values(frm) {
-  const { bank, branch } = (await set_details(frm)) || {};
-  return frm.set_value({ bank, branch });
+  const data = await set_details(frm);
+  if (frm.doc.docstatus === 0) {
+    ['bank', 'branch'].forEach(field => {
+      if (data && data[field]) {
+        frm.set_value(field, data[field]);
+      }
+    });
+  }
 }
 
 export function render_details(frm, el, isExtended = false) {
