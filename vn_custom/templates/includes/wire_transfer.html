@@ -67,6 +67,12 @@
       <dd class="vn-strong">{{ doc.get_formatted('total') }}</dd>
     </dl>
   </section>
+  {%- set terms = frappe.db.get_single_value('Wire Transfer Settings',
+  'wire_transfer_terms') -%} {%- if terms -%}
+  <section>
+    {{ frappe.db.get_value('Terms and Conditions', terms, 'terms') }}
+  </section>
+  {%- endif -%}
   <div class="vn-fill"></div>
   {%- if not no_letterhead and footer-%}
   <footer>{{ footer }}</footer>

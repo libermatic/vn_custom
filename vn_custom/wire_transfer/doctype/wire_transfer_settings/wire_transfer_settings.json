@@ -10,6 +10,8 @@
   "transit_account",
   "income_account",
   "cost_center",
+  "print",
+  "wire_transfer_terms",
   "fees_calculation_section",
   "fees_rules"
  ],
@@ -66,10 +68,21 @@
    "fieldtype": "Table",
    "label": "Fees Rules",
    "options": "Wire Transfer Settings Fees Rule"
+  },
+  {
+   "fieldname": "print",
+   "fieldtype": "Section Break",
+   "label": "Printing"
+  },
+  {
+   "fieldname": "wire_transfer_terms",
+   "fieldtype": "Link",
+   "label": "Wire Transfer Terms",
+   "options": "Terms and Conditions"
   }
  ],
  "issingle": 1,
- "modified": "2019-09-21 00:54:08.037186",
+ "modified": "2019-09-30 22:13:56.732016",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer Settings",
