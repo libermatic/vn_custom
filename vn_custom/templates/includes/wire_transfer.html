@@ -48,6 +48,11 @@
       <dt>Name</dt>
       <dd>{{ doc.account_holder }}</dd>
     </dl>
+    {%- endif -%} {%- if doc.transaction_id -%}
+    <dl>
+      <dt>Transaction ID</dt>
+      <dd>{{ doc.transaction_id }}</dd>
+    </dl>
     {%- endif -%}
     <dl class="vn-overline">
       <dt>Amount</dt>
