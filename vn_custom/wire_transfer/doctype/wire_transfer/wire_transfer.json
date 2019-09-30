@@ -14,6 +14,7 @@
   "request_datetime",
   "transfer_datetime",
   "company",
+  "status",
   "amended_from",
   "section_break_5",
   "amount",
@@ -154,10 +155,19 @@
    "fieldtype": "Data",
    "label": "Sender Mobile",
    "options": "Phone"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nDraft\nPending\nUnpaid\nCompleted\nCancelled",
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2019-09-24 22:06:41.931081",
+ "modified": "2019-09-30 21:26:41.394237",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",

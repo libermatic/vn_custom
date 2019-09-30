@@ -22,6 +22,9 @@ class WireTransfer(AccountsController):
     def validate(self):
         pass
 
+    def before_save(self):
+        self.status = self.workflow_state
+
     def before_submit(self):
         self._set_missing_fields()
 
