@@ -96,6 +96,7 @@ def workflows():
                     "update_field": "status",
                     "update_value": "Cancelled",
                     "allow_edit": "Accounts User",
+                    "is_optional_state": 1,
                 },
             ],
             "transitions": [
