@@ -38,6 +38,8 @@ class WireTransfer(AccountsController):
         delete_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
 
     def make_gl_entry(self):
+        if not self.workflow_action:
+            frappe.throw(_("Workflow Action is required to make GL Entry"))
         settings = frappe.get_single("Wire Transfer Settings")
         if self.workflow_action == ACCEPT:
             make_gl_entries(
@@ -106,9 +108,9 @@ class WireTransfer(AccountsController):
         )
 
     def _set_missing_fields(self):
-        self.total = flt(self.amount) + flt(self.fees)
         if not self.get("workflow_action"):
             self.workflow_action = None
+        self.total = flt(self.amount) + flt(self.fees)
         if self.workflow_action == ACCEPT and not self.request_datetime:
             self.request_datetime = get_datetime()
         elif self.workflow_action == TRANSFER and not self.transfer_datetime:
@@ -116,8 +118,12 @@ class WireTransfer(AccountsController):
 
     def _get_posting_date(self):
         if self.workflow_action == ACCEPT:
+            if not self.request_datetime:
+                frappe.throw(_("Request Datetime not set"))
             return getdate(self.request_datetime)
         elif self.workflow_action == TRANSFER:
+            if not self.transfer_datetime:
+                frappe.throw(_("Transfer Datetime not set"))
             return getdate(self.transfer_datetime)
 
     def set_fees(self):
