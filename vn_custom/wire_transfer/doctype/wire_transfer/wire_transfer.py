@@ -17,7 +17,9 @@ from vn_custom.utils import mapr
 
 
 ACCEPT = "Accept"
+RETURN = "Return"
 TRANSFER = "Transfer"
+REVERSE = "Reverse"
 
 
 class WireTransfer(AccountsController):
@@ -45,53 +47,47 @@ class WireTransfer(AccountsController):
 
     def make_gl_entry(self):
         settings = frappe.get_single("Wire Transfer Settings")
-        if self.workflow_action == ACCEPT:
+        if self.workflow_action in [ACCEPT, RETURN]:
+            parity = -1 if self.workflow_action == RETURN else 1
             make_gl_entries(
                 mapr(
                     self.get_gl_dict,
                     [
                         {
                             "account": self.cash_account,
-                            "against": self.account_holder,
-                            "debit": self.total,
+                            "against": self.account,
+                            "debit": self.total * parity,
                         },
                         {
                             "account": settings.income_account,
                             "against": self.account,
-                            "credit": self.fees,
+                            "credit": self.fees * parity,
                             "cost_center": settings.cost_center,
                         },
                         {
                             "account": settings.transit_account,
                             "party": self.account,
-                            "credit": self.amount,
+                            "credit": self.amount * parity,
                         },
                     ],
                 )
             )
-        elif self.workflow_action == TRANSFER:
-            remarks = (
-                "Transaction reference no {} dated {}".format(
-                    self.transaction_id, getdate(self.transfer_datetime)
-                )
-                if self.transaction_id
-                else None
-            )
+        elif self.workflow_action in [TRANSFER, REVERSE]:
+            parity = -1 if self.workflow_action == REVERSE else 1
             make_gl_entries(
                 mapr(
                     self.get_gl_dict,
                     [
                         {
                             "account": self.bank_account,
-                            "party": self.account,
-                            "against": settings.transit_account,
-                            "credit": self.amount,
-                            "remarks": remarks,
+                            "against": self.account,
+                            "credit": self.amount * parity,
+                            "remarks": self._get_remarks(),
                         },
                         {
                             "account": settings.transit_account,
                             "against": self.bank_account,
-                            "debit": self.amount,
+                            "debit": self.amount * parity,
                         },
                     ],
                 )
@@ -117,14 +113,29 @@ class WireTransfer(AccountsController):
         self.total = flt(self.amount) + flt(self.fees)
         if self.workflow_action == ACCEPT and not self.request_datetime:
             self.request_datetime = get_datetime()
+        elif self.workflow_action == RETURN and not self.return_datetime:
+            self.return_datetime = get_datetime()
         elif self.workflow_action == TRANSFER and not self.transfer_datetime:
             self.transfer_datetime = get_datetime()
+        elif self.workflow_action == REVERSE and not self.reverse_datetime:
+            self.reverse_datetime = get_datetime()
 
     def _get_posting_date(self):
         if self.workflow_action == ACCEPT:
             return getdate(self.request_datetime)
+        elif self.workflow_action == RETURN:
+            return getdate(self.return_datetime)
         elif self.workflow_action == TRANSFER:
             return getdate(self.transfer_datetime)
+        elif self.workflow_action == REVERSE:
+            return getdate(self.reverse_datetime)
+
+    def _get_remarks(self):
+        if self.workflow_action == TRANSFER and self.transaction_id:
+            return "Transaction reference no {} dated {}".format(
+                self.transaction_id, getdate(self.transfer_datetime)
+            )
+        return None
 
     def set_fees(self):
         settings = frappe.get_single("Wire Transfer Settings")

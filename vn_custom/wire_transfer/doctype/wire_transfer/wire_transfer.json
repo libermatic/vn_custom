@@ -12,7 +12,9 @@
   "sender_mobile",
   "column_break_4",
   "request_datetime",
+  "return_datetime",
   "transfer_datetime",
+  "reverse_datetime",
   "company",
   "status",
   "amended_from",
@@ -162,12 +164,26 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "\nDraft\nPending\nUnpaid\nCompleted\nCancelled",
+   "options": "\nDraft\nPending\nReturned\nUnpaid\nCompleted\nFailed\nCancelled",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "return_datetime",
+   "fieldtype": "Datetime",
+   "label": "Return Datetime",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reverse_datetime",
+   "fieldtype": "Datetime",
+   "label": "Reverse Datetime",
    "read_only": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2019-09-30 21:26:41.394237",
+ "modified": "2019-10-01 01:47:48.774774",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",
