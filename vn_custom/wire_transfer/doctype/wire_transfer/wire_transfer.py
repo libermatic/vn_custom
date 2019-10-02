@@ -4,8 +4,10 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe import _
 from frappe.utils import get_datetime, getdate, flt
+from frappe.workflow.doctype.workflow_action.workflow_action import (
+    process_workflow_actions,
+)
 from erpnext.controllers.accounts_controller import AccountsController
 from erpnext.accounts.general_ledger import make_gl_entries, delete_gl_entries
 from erpnext.accounts.utils import get_account_currency
@@ -35,6 +37,7 @@ class WireTransfer(AccountsController):
         self._set_missing_fields()
 
     def on_update_after_submit(self):
+        process_workflow_actions(self, "on_update_after_submit")
         self.make_gl_entry()
 
     def on_cancel(self):
