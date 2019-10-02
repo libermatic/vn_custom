@@ -18,7 +18,7 @@ async function set_default_fields(frm) {
 }
 
 function render_dashboard(frm) {
-  if (frm.doc.docstatus > 0) {
+  if (!frm.doc.__islocal && frm.doc.docstatus < 2) {
     frm.dashboard.show();
     const $wrapper = $(
       '<div class="form-dashboard-section custom" />'
