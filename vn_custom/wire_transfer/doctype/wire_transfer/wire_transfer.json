@@ -64,6 +64,7 @@
    "allow_on_submit": 1,
    "fieldname": "bank_account",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Bank Account",
    "options": "Account",
    "reqd": 1
@@ -183,7 +184,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2019-10-01 01:47:48.774774",
+ "modified": "2019-10-02 15:24:04.945975",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",

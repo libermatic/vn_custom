@@ -68,13 +68,24 @@ function show_general_ledger(frm) {
   }
 }
 
+const bank_account_filters = { account_type: 'Bank', is_group: 0 };
+
+const listview = {
+  onload: function(lst) {
+    lst.page.fields_dict.bank_account.get_query = function() {
+      return { filters: bank_account_filters };
+    };
+  },
+};
+
 export default {
+  listview,
   setup: function(frm) {
     frm.set_query('cash_account', {
       account_type: ['in', ['Cash', 'Bank']],
       is_group: 0,
     });
-    frm.set_query('bank_account', { account_type: 'Bank', is_group: 0 });
+    frm.set_query('bank_account', bank_account_filters);
   },
   refresh: function(frm) {
     frm.toggle_enable(
