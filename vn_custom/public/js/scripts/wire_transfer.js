@@ -32,6 +32,42 @@ function render_dashboard(frm) {
   }
 }
 
+function get_edge_date(comp_fn, dates) {
+  return frappe.datetime.obj_to_str(
+    new Date(
+      comp_fn.apply(
+        null,
+        dates.filter(d => !!d).map(d => frappe.datetime.str_to_obj(d))
+      )
+    )
+  );
+}
+
+function show_general_ledger(frm) {
+  if (frm.doc.docstatus === 1) {
+    frm.add_custom_button(
+      __('Accounting Ledger'),
+      function() {
+        const dates = [
+          'request_datetime',
+          'return_datetime',
+          'transfer_datetime',
+          'reverse_datetime',
+        ].map(field => frm.doc[field]);
+        frappe.route_options = {
+          voucher_no: frm.doc.name,
+          from_date: get_edge_date(Math.min, dates),
+          to_date: get_edge_date(Math.max, dates),
+          company: frm.doc.company,
+          group_by: 'Group by Voucher (Consolidated)',
+        };
+        frappe.set_route('query-report', 'General Ledger');
+      },
+      __('View')
+    );
+  }
+}
+
 export default {
   setup: function(frm) {
     frm.set_query('cash_account', {
@@ -51,6 +87,7 @@ export default {
     );
     set_default_fields(frm);
     render_dashboard(frm);
+    show_general_ledger(frm);
   },
   amount: async function(frm) {
     const { amount = 0 } = frm.doc;
