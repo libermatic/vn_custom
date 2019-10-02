@@ -48,6 +48,11 @@
       <dt>Name</dt>
       <dd>{{ doc.account_holder }}</dd>
     </dl>
+    {%- endif -%} {%- if doc.ifsc -%}
+    <dl>
+      <dt>IFSC</dt>
+      <dd>{{ doc.ifsc }}</dd>
+    </dl>
     {%- endif -%} {%- if doc.transaction_id -%}
     <dl>
       <dt>Transaction ID</dt>
