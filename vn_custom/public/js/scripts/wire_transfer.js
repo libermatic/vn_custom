@@ -90,11 +90,11 @@ export default {
   refresh: function(frm) {
     frm.toggle_enable(
       ['request_datetime', 'fees', 'cash_account'],
-      frm.doc.docstatus === 0 || frm.doc.workflow_state === 'Unpaid'
+      frm.doc.docstatus === 0 || frm.doc.status === 'Unpaid'
     );
     frm.toggle_enable(
       ['transfer_datetime', 'bank_account', 'transaction_id'],
-      frm.doc.docstatus === 0 || frm.doc.workflow_state === 'Pending'
+      frm.doc.docstatus === 0 || frm.doc.status === 'Pending'
     );
     set_default_fields(frm);
     render_dashboard(frm);
