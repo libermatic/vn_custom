@@ -21,6 +21,17 @@ def get_data():
             ],
         },
         {
+            "label": _("Reports"),
+            "items": [
+                {
+                    "type": "report",
+                    "is_query_report": True,
+                    "name": "Wire Transfer Summary",
+                    "label": _("Wire Transfer Summary"),
+                }
+            ],
+        },
+        {
             "label": _("Settings"),
             "items": [
                 {

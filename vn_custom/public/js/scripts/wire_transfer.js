@@ -78,7 +78,7 @@ function show_general_ledger(frm) {
   }
 }
 
-const bank_account_filters = { account_type: 'Bank', is_group: 0 };
+export const bank_account_filters = { account_type: 'Bank', is_group: 0 };
 
 const listview = {
   onload: function(lst) {
