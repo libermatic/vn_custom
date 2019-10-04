@@ -1,3 +1,5 @@
+import pick from 'lodash/pick';
+
 import { set_details, render_details } from './wire_account';
 
 function set_total(frm) {
@@ -44,6 +46,14 @@ function get_edge_date(comp_fn, dates) {
 }
 
 function show_general_ledger(frm) {
+  if (frm.doc.docstatus > 0) {
+    frm.add_custom_button(__('New Wire Transfer'), function() {
+      frappe.new_doc(
+        'Wire Transfer',
+        pick(frm.doc, ['account', 'sender_name', 'sender_mobile'])
+      );
+    });
+  }
   if (frm.doc.docstatus === 1) {
     frm.add_custom_button(
       __('Accounting Ledger'),
