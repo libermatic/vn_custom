@@ -27,6 +27,7 @@
   "cash_account",
   "column_break_15",
   "bank_account",
+  "bank_mode",
   "transaction_id"
  ],
  "fields": [
@@ -181,10 +182,17 @@
    "fieldtype": "Datetime",
    "label": "Reverse Datetime",
    "read_only": 1
+  },
+  {
+   "fieldname": "bank_mode",
+   "fieldtype": "Select",
+   "label": "Bank Mode",
+   "options": "\nThird Party\nNEFT\nIMPS",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2019-10-02 15:24:04.945975",
+ "modified": "2019-10-04 22:59:56.090901",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",
