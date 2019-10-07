@@ -103,7 +103,7 @@ export default {
       frm.doc.docstatus === 0 || frm.doc.status === 'Unpaid'
     );
     frm.toggle_enable(
-      ['transfer_datetime', 'bank_account', 'transaction_id'],
+      ['transfer_datetime', 'bank_account', 'bank_mode', 'transaction_id'],
       frm.doc.docstatus === 0 || frm.doc.status === 'Pending'
     );
     set_default_fields(frm);
