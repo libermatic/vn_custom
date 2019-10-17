@@ -11,7 +11,6 @@ export default function withQtyInList(Items) {
       );
       const { item_code, item_name, item_image, actual_qty, stock_uom } = item;
       const item_title = item_name || item_code;
-      const qty_text = actual_qty ? `${actual_qty} ${stock_uom}` : '-';
 
       const template = `
         <div class="pos-item-wrapper image-view-item" data-item-code="${escape(
@@ -52,7 +51,7 @@ export default function withQtyInList(Items) {
                   ? 'background-color: rgba(152, 216, 91, 0.6); color: rgba(54, 65, 76, 0.8);'
                   : ''
               }">
-                <div>${qty_text}</div>
+                ${actual_qty ? `<div>${actual_qty} ${stock_uom}</div>` : ''}
                 <div>${price_list_rate}</div>
               </div>
             </a>
