@@ -26,6 +26,7 @@ def _get_columns(filters):
         }
 
     return [
+        make_column("wire_transfer", type="Link", options="Wire Transfer", width=120),
         make_column("account", type="Link", options="Wire Account", width=120),
         make_column("account_holder", width=150),
         make_column("status"),
@@ -68,6 +69,7 @@ def _get_data(clauses, values, keys):
     rows = frappe.db.sql(
         """
             SELECT
+                name AS wire_transfer,
                 account,
                 account_holder,
                 status,
