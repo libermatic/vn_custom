@@ -11,6 +11,7 @@ from frappe.workflow.doctype.workflow_action.workflow_action import (
 from erpnext.controllers.accounts_controller import AccountsController
 from erpnext.accounts.general_ledger import make_gl_entries, delete_gl_entries
 from erpnext.accounts.utils import get_account_currency
+from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import merge
 
 from vn_custom.utils import mapr
@@ -28,6 +29,8 @@ class WireTransfer(AccountsController):
 
     def before_save(self):
         self.status = self.workflow_state
+        mop = get_bank_cash_account(self.mode_of_payment, self.company) or {}
+        self.cash_account = mop.get("account")
 
     def before_submit(self):
         self._set_missing_fields()
@@ -47,8 +50,8 @@ class WireTransfer(AccountsController):
 
     def make_gl_entry(self):
         settings = frappe.get_single("Wire Transfer Settings")
+        sign = -1 if self.workflow_action in [RETURN, REVERSE] else 1
         if self.workflow_action in [ACCEPT, RETURN]:
-            parity = -1 if self.workflow_action == RETURN else 1
             make_gl_entries(
                 mapr(
                     self.get_gl_dict,
@@ -56,24 +59,23 @@ class WireTransfer(AccountsController):
                         {
                             "account": self.cash_account,
                             "against": self.account,
-                            "debit": self.total * parity,
+                            "debit": self.total * sign,
                         },
                         {
                             "account": settings.income_account,
                             "against": self.account,
-                            "credit": self.fees * parity,
+                            "credit": self.fees * sign,
                             "cost_center": settings.cost_center,
                         },
                         {
                             "account": settings.transit_account,
                             "party": self.account,
-                            "credit": self.amount * parity,
+                            "credit": self.amount * sign,
                         },
                     ],
                 )
             )
         elif self.workflow_action in [TRANSFER, REVERSE]:
-            parity = -1 if self.workflow_action == REVERSE else 1
             make_gl_entries(
                 mapr(
                     self.get_gl_dict,
@@ -81,13 +83,13 @@ class WireTransfer(AccountsController):
                         {
                             "account": self.bank_account,
                             "against": self.account,
-                            "credit": self.amount * parity,
+                            "credit": self.amount * sign,
                             "remarks": self._get_remarks(),
                         },
                         {
                             "account": settings.transit_account,
                             "against": self.bank_account,
-                            "debit": self.amount * parity,
+                            "debit": self.amount * sign,
                         },
                     ],
                 )

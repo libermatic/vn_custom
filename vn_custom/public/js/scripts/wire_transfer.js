@@ -10,12 +10,12 @@ function set_total(frm) {
 async function set_default_fields(frm) {
   if (frm.doc.__islocal) {
     const {
-      message: { cash_account, bank_account } = {},
+      message: { mode_of_payment, bank_account } = {},
     } = await frappe.db.get_value('Wire Transfer Settings', null, [
-      'cash_account',
+      'mode_of_payment',
       'bank_account',
     ]);
-    frm.set_value({ cash_account, bank_account });
+    frm.set_value({ mode_of_payment, bank_account });
   }
 }
 
@@ -78,6 +78,19 @@ function show_general_ledger(frm) {
   }
 }
 
+async function set_cash_account(frm) {
+  const { mode_of_payment, company } = frm.doc;
+  if (!mode_of_payment) {
+    return frm.set_value('cash_account', null);
+  }
+  const { message: mop = {} } = await frappe.call({
+    method:
+      'erpnext.accounts.doctype.sales_invoice.sales_invoice.get_bank_cash_account',
+    args: { mode_of_payment, company },
+  });
+  return frm.set_value('cash_account', mop.account);
+}
+
 export const bank_account_filters = { account_type: 'Bank', is_group: 0 };
 
 const listview = {
@@ -91,15 +104,12 @@ const listview = {
 export default {
   listview,
   setup: function(frm) {
-    frm.set_query('cash_account', {
-      account_type: ['in', ['Cash', 'Bank']],
-      is_group: 0,
-    });
+    frm.set_query('mode_of_payment', { enabled: 1 });
     frm.set_query('bank_account', bank_account_filters);
   },
   refresh: function(frm) {
     frm.toggle_enable(
-      ['request_datetime', 'fees', 'cash_account'],
+      ['request_datetime', 'fees', 'mode_of_payment'],
       frm.doc.docstatus === 0 || frm.doc.status === 'Unpaid'
     );
     frm.toggle_enable(
@@ -122,6 +132,7 @@ export default {
     }
   },
   fees: set_total,
+  mode_of_payment: set_cash_account,
   before_workflow_action: function(frm) {
     frm.doc.workflow_action = frm.selected_workflow_action;
   },
