@@ -193,6 +193,7 @@
    "reqd": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "mode_of_payment",
    "fieldtype": "Link",
    "label": "Mode of Payment",
@@ -201,7 +202,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2019-10-21 16:04:10.584886",
+ "modified": "2019-10-22 10:21:00.519139",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
  "name": "Wire Transfer",
