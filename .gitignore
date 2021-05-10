@@ -6,6 +6,8 @@ tags
 vn_custom/docs/current
 __pycache__
 
+.vscode
+
 # Bench runtime
 node_modules/
 vn_custom/public/node_modules
