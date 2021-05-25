@@ -2,7 +2,7 @@
  "cards_label": "Wire Transfer",
  "category": "Domains",
  "charts": [],
- "creation": "2021-05-18 16:23:00.072467",
+ "creation": "2021-05-24 04:57:17.475653",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
  "docstatus": 0,
@@ -13,12 +13,13 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Wire Transfer",
+ "label": "Wire Transfers",
  "links": [
   {
    "hidden": 0,
    "is_query_report": 0,
    "label": "Documents",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
   },
@@ -44,6 +45,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Reports",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
   },
@@ -60,6 +62,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Settings",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
   },
@@ -73,10 +76,10 @@
    "type": "Link"
   }
  ],
- "modified": "2021-05-18 16:40:52.359047",
+ "modified": "2021-05-24 04:57:17.475653",
  "modified_by": "Administrator",
  "module": "Wire Transfer",
- "name": "Wire Transfer",
+ "name": "Wire Transfers",
  "owner": "Administrator",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
