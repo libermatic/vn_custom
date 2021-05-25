@@ -46,9 +46,15 @@ class WireTransfer(AccountsController):
         self.make_gl_entry()
 
     def on_cancel(self):
-        delete_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
+        self.ignore_linked_doctypes = "GL Entry"
+        self.make_gl_entry()
 
     def make_gl_entry(self):
+        if self.docstatus == 2:
+            return make_reverse_gl_entries(
+                voucher_type=self.doctype, voucher_no=self.name
+            )
+
         settings = frappe.get_single("Wire Transfer Settings")
         sign = -1 if self.workflow_action in [RETURN, REVERSE] else 1
         if self.workflow_action in [ACCEPT, RETURN]:
