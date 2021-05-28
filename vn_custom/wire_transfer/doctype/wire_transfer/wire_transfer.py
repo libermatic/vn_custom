@@ -9,7 +9,7 @@ from frappe.workflow.doctype.workflow_action.workflow_action import (
     process_workflow_actions,
 )
 from erpnext.controllers.accounts_controller import AccountsController
-from erpnext.accounts.general_ledger import make_gl_entries, delete_gl_entries
+from erpnext.accounts.general_ledger import make_gl_entries, make_reverse_gl_entries
 from erpnext.accounts.utils import get_account_currency
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from toolz import merge
@@ -39,6 +39,7 @@ class WireTransfer(AccountsController):
         self.make_gl_entry()
 
     def before_update_after_submit(self):
+        self.flags.ignore_validate_update_after_submit = True
         self._set_missing_fields()
 
     def on_update_after_submit(self):
@@ -145,6 +146,7 @@ class WireTransfer(AccountsController):
             )
         return None
 
+    @frappe.whitelist()
     def set_fees(self):
         settings = frappe.get_single("Wire Transfer Settings")
         for rule in settings.fees_rules:

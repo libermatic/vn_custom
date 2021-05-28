@@ -108,13 +108,26 @@ export default {
   },
   refresh: function (frm) {
     frm.toggle_enable(
-      ['request_datetime', 'fees', 'mode_of_payment'],
+      ['fees', 'mode_of_payment'],
       frm.doc.docstatus === 0 || frm.doc.status === 'Unpaid'
     );
     frm.toggle_enable(
-      ['transfer_datetime', 'bank_account', 'bank_mode', 'transaction_id'],
+      ['bank_account', 'bank_mode', 'transaction_id'],
       frm.doc.docstatus === 0 || frm.doc.status === 'Pending'
     );
+
+    // hack to prevent dirty flag being set.
+    // values geting reset because the datetime value from backend is taken to be
+    // different from the model value in form.
+    if (frm.doc.docstatus === 1) {
+      frm.set_df_property('transfer_datetime', 'get_status', () =>
+        frm.doc.status === 'Pending' ? 'Write' : 'Read'
+      );
+      frm.set_df_property('request_datetime', 'get_status', () =>
+        frm.doc.status === 'Unpaid' ? 'Write' : 'Read'
+      );
+    }
+
     set_default_fields(frm);
     render_dashboard(frm);
     show_general_ledger(frm);
