@@ -9,12 +9,11 @@ function set_total(frm) {
 
 async function set_default_fields(frm) {
   if (frm.doc.__islocal) {
-    const {
-      message: { mode_of_payment, bank_account } = {},
-    } = await frappe.db.get_value('Wire Transfer Settings', null, [
-      'mode_of_payment',
-      'bank_account',
-    ]);
+    const { message: { mode_of_payment, bank_account } = {} } =
+      await frappe.db.get_value('Wire Transfer Settings', null, [
+        'mode_of_payment',
+        'bank_account',
+      ]);
     frm.set_value({ mode_of_payment, bank_account });
   }
 }
@@ -39,7 +38,7 @@ function get_edge_date(comp_fn, dates) {
     new Date(
       comp_fn.apply(
         null,
-        dates.filter(d => !!d).map(d => frappe.datetime.str_to_obj(d))
+        dates.filter((d) => !!d).map((d) => frappe.datetime.str_to_obj(d))
       )
     )
   );
@@ -47,7 +46,7 @@ function get_edge_date(comp_fn, dates) {
 
 function show_general_ledger(frm) {
   if (frm.doc.docstatus > 0) {
-    frm.add_custom_button(__('New Wire Transfer'), function() {
+    frm.add_custom_button(__('New Wire Transfer'), function () {
       frappe.new_doc(
         'Wire Transfer',
         pick(frm.doc, ['account', 'sender_name', 'sender_mobile'])
@@ -57,13 +56,13 @@ function show_general_ledger(frm) {
   if (frm.doc.docstatus === 1) {
     frm.add_custom_button(
       __('Accounting Ledger'),
-      function() {
+      function () {
         const dates = [
           'request_datetime',
           'return_datetime',
           'transfer_datetime',
           'reverse_datetime',
-        ].map(field => frm.doc[field]);
+        ].map((field) => frm.doc[field]);
         frappe.route_options = {
           voucher_no: frm.doc.name,
           from_date: get_edge_date(Math.min, dates),
@@ -94,8 +93,8 @@ async function set_cash_account(frm) {
 export const bank_account_filters = { account_type: 'Bank', is_group: 0 };
 
 const listview = {
-  onload: function(lst) {
-    lst.page.fields_dict.bank_account.get_query = function() {
+  onload: function (lst) {
+    lst.page.fields_dict.bank_account.get_query = function () {
       return { filters: bank_account_filters };
     };
   },
@@ -103,11 +102,11 @@ const listview = {
 
 export default {
   listview,
-  setup: function(frm) {
+  setup: function (frm) {
     frm.set_query('mode_of_payment', { enabled: 1 });
     frm.set_query('bank_account', bank_account_filters);
   },
-  refresh: function(frm) {
+  refresh: function (frm) {
     frm.toggle_enable(
       ['request_datetime', 'fees', 'mode_of_payment'],
       frm.doc.docstatus === 0 || frm.doc.status === 'Unpaid'
@@ -120,7 +119,7 @@ export default {
     render_dashboard(frm);
     show_general_ledger(frm);
   },
-  amount: async function(frm) {
+  amount: async function (frm) {
     const { amount = 0 } = frm.doc;
     try {
       if (amount) {
@@ -133,10 +132,10 @@ export default {
   },
   fees: set_total,
   mode_of_payment: set_cash_account,
-  before_workflow_action: function(frm) {
+  before_workflow_action: function (frm) {
     frm.doc.workflow_action = frm.selected_workflow_action;
   },
-  after_workflow_action: function(frm) {
+  after_workflow_action: function (frm) {
     frm.reload_doc();
   },
 };
