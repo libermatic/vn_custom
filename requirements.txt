@@ -1,4 +1,3 @@
 frappe
 erpnext
-libermatic_extras
 toolz
