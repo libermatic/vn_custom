@@ -70,7 +70,7 @@ app_include_js = "/assets/js/vn_custom.min.js"
 # web_include_js = "/assets/vn_custom/js/vn_custom.js"
 
 # include js in page
-page_js = {"point-of-sale": "public/js/point_of_sale.js"}
+# page_js = {"page": "public/js/page.js"}
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
@@ -159,9 +159,9 @@ doc_events = {
 # Overriding Whitelisted Methods
 # ------------------------------
 
-override_whitelisted_methods = {
-    "erpnext.selling.page.point_of_sale.point_of_sale.get_items": "vn_custom.api.pos.get_items"  # noqa
-}
+# override_whitelisted_methods = {
+#     "method": "vn_custom.api.method"
+# }
 
 # Jinja Environment Customizations
 # --------------------------------
