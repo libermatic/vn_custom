@@ -2,7 +2,6 @@
 # Copyright (c) 2019, Libermatic and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
 import frappe
 from frappe.utils import get_datetime, getdate, flt
 from frappe.workflow.doctype.workflow_action.workflow_action import (

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from vn_custom.doc_events.delivery_note import set_item_prices
 from vn_custom.api.item import get_other_prices
 from vn_custom.utils import pick
