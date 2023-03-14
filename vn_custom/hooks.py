@@ -70,7 +70,7 @@ app_include_js = ["vn_custom.bundle.js"]
 # web_include_js = "/assets/vn_custom/js/vn_custom.js"
 
 # include js in page
-page_js = {"point-of-sale": "public/includes/point_of_sale.js"}
+# page_js = {"point-of-sale": "public/includes/point_of_sale.js"}
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
