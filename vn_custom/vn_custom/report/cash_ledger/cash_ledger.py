@@ -35,29 +35,26 @@ def _get_filters(filters):
         if filters.date_range
         else {},
     )
-    return "", values
+    return "", frappe._dict(values)
 
 
 def _get_data(clauses, values, keys):
-    gles = frappe.db.sql(
-        """
-            SELECT
-                gle.posting_date AS posting_date,
-                gle.voucher_type AS voucher_type,
-                gle.voucher_no AS voucher_no,
-                gle.debit AS debit,
-                gle.credit AS credit
-            FROM `tabGL Entry` AS gle
-            WHERE
-                gle.account = %(cash_account)s AND
-                gle.posting_date BETWEEN %(from_date)s AND %(end_date)s
-            ORDER BY gle.posting_date
-        """.format(
-            clauses=clauses
-        ),
-        values=values,
-        as_dict=1,
-    )
+    GLEntry = frappe.qb.DocType("GL Entry")
+    gles = (
+        frappe.qb.from_(GLEntry)
+        .select(
+            GLEntry.posting_date,
+            GLEntry.voucher_type,
+            GLEntry.voucher_no,
+            GLEntry.debit,
+            GLEntry.credit,
+        )
+        .where(
+            (GLEntry.account == values.cash_account)
+            & (GLEntry.posting_date[values.from_date : values.to_date])
+        )
+        .orderby(GLEntry.posting_date)
+    ).run(as_dict=1)
 
     purchase_vouchers = [
         x.voucher_no for x in gles if x.voucher_type == "Purchase Invoice"
@@ -69,69 +66,62 @@ def _get_data(clauses, values, keys):
         if x.voucher_type not in ["Purchase Invoice", "Payment Entry"]
     ]
 
+    PurchaseInvoiceItem = frappe.qb.DocType("Purchase Invoice Item")
     pi_cost_centers = (
-        frappe.db.sql(
-            """
-            SELECT
-                pii.parent AS voucher_no,
-                pii.cost_center AS cost_center
-            FROM `tabPurchase Invoice Item` AS pii
-            WHERE pii.parent IN %(voucher_nos)s
-        """,
-            values={"voucher_nos": purchase_vouchers},
-            as_dict=1,
-        )
+        (
+            frappe.qb.from_(PurchaseInvoiceItem)
+            .select(
+                PurchaseInvoiceItem.parent.as_("voucher_no"),
+                PurchaseInvoiceItem.cost_center,
+            )
+            .where(PurchaseInvoiceItem.parent.isin(purchase_vouchers))
+        ).run(as_dict=1)
         if purchase_vouchers
         else []
     )
-    pe_cost_centers = (
-        frappe.db.sql(
-            """
-            SELECT
-                per.parent AS voucher_no,
-                ii.cost_center AS cost_center
-            FROM `tabPayment Entry Reference` AS per
-            LEFT JOIN `tabPayment Entry` AS pe ON pe.name = per.parent
-            LEFT JOIN (
-                SELECT parent, cost_center FROM `tabSales Invoice Item`
-                UNION ALL
-                SELECT parent, cost_center FROM `tabPurchase Invoice Item`
-            ) AS ii
-                ON ii.parent = per.reference_name
-            WHERE
-                pe.docstatus = 1 AND per.parent IN %(voucher_nos)s
-        """,
-            values={"voucher_nos": payment_vouchers},
-            as_dict=1,
+    PaymentEntryReference = frappe.qb.DocType("Payment Entry Reference")
+    SalesInvoiceItem = frappe.qb.DocType("Sales Invoice Item")
+    invoice_sub = (
+        frappe.qb.from_(SalesInvoiceItem)
+        .select(SalesInvoiceItem.parent, SalesInvoiceItem.cost_center)
+        .union_all(
+            frappe.qb.from_(PurchaseInvoiceItem).select(
+                PurchaseInvoiceItem.parent, PurchaseInvoiceItem.cost_center
+            )
         )
+        .as_("invoice_sub")
+    )
+    pe_cost_centers = (
+        (
+            frappe.qb.from_(PaymentEntryReference)
+            .left_join(invoice_sub)
+            .on(invoice_sub.parent == PaymentEntryReference.reference_name)
+            .where(
+                (PaymentEntryReference.docstatus == 1)
+                & (PaymentEntryReference.parent.isin(payment_vouchers))
+            )
+            .select(
+                PaymentEntryReference.parent.as_("voucher_no"), invoice_sub.cost_center
+            )
+        ).run(as_dict=1)
         if payment_vouchers
         else []
     )
 
+    Account = frappe.qb.DocType("Account")
     other_cost_centers = (
-        frappe.db.sql(
-            """
-            SELECT
-                gle.voucher_no AS voucher_no,
-                gle.cost_center AS cost_center
-            FROM `tabGL Entry` AS gle
-            LEFT JOIN `tabAccount` AS a ON
-                a.name = gle.account
-            WHERE
-                a.root_type IN ('Income', 'Expense') AND
-                gle.voucher_no IN %(voucher_nos)s
-        """,
-            values={
-                "voucher_nos": [
-                    x.voucher_no
-                    for x in gles
-                    if x.voucher_type not in ["Purchase Invoice", "Payment Entry"]
-                ]
-            },
-            as_dict=1,
-        )
+        (
+            frappe.qb.from_(GLEntry)
+            .left_join(Account)
+            .on(Account.name == GLEntry.account)
+            .where(
+                (Account.root_type.isin(["Income", "Expense"]))
+                & (GLEntry.voucher_no.isin(other_vouchers))
+            )
+            .select(GLEntry.voucher_no, GLEntry.cost_center)
+        ).run(as_dict=1)
         if other_vouchers
-        else []
+        else [],
     )
 
     def filter_cost_center(result):

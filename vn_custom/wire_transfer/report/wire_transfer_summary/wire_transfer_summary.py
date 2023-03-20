@@ -1,17 +1,9 @@
 import frappe
 from frappe import _
-from functools import partial
-from toolz import compose, pluck, concatv, merge
-
-from vn_custom.utils import pick, mapr
 
 
 def execute(filters):
-    columns = _get_columns(filters)
-    keys = compose(list, partial(pluck, "fieldname"))(columns)
-    clauses, values = _get_filters(filters)
-    data = _get_data(clauses, values, keys)
-    return columns, data
+    return _get_columns(filters), _get_data(filters)
 
 
 def _get_columns(filters):
@@ -37,7 +29,7 @@ def _get_columns(filters):
     ]
 
 
-def _get_filters(filters):
+def _get_data(filters):
     date_field_map = {
         "Accepted": "request_datetime",
         "Transfered": "transfer_datetime",
@@ -46,45 +38,33 @@ def _get_filters(filters):
         "Created": "creation",
         "Modified": "modified",
     }
-    clauses = concatv(
-        [
-            "docstatus = 1",
-            "DATE({date_field}) BETWEEN %(from_date)s AND %(to_date)s".format(
-                date_field=date_field_map.get(filters.date_type, "creation")
-            ),
-        ],
-        ["bank_account = %(bank_account)s"] if filters.bank_account else [],
-        ["bank_mode = %(bank_mode)s"] if filters.bank_mode else [],
+    WireTransfer = frappe.qb.DocType("Wire Transfer")
+    q = (
+        frappe.qb.from_(WireTransfer)
+        .where(
+            (WireTransfer.docstatus == 1)
+            & (
+                WireTransfer[date_field_map.get(filters.date_type, "creation")][
+                    filters.date_range[0] : filters.date_range[1]
+                ]
+            )
+        )
+        .select(
+            WireTransfer.name.as_("wire_transfer"),
+            WireTransfer.account,
+            WireTransfer.account_holder,
+            WireTransfer.status,
+            WireTransfer.request_datetime,
+            WireTransfer.transfer_datetime,
+            WireTransfer.amount,
+            WireTransfer.fees,
+            WireTransfer.total,
+        )
     )
 
-    values = merge(
-        pick(["bank_account", "bank_mode"], filters),
-        {"from_date": filters.date_range[0], "to_date": filters.date_range[1]},
-    )
-    return " AND ".join(clauses), values
+    if filters.bank_mode:
+        q.where(WireTransfer.bank_mode == filters.bank_mode)
+    if filters.bank_account:
+        q.where(WireTransfer.bank_account == filters.bank_account)
 
-
-def _get_data(clauses, values, keys):
-    rows = frappe.db.sql(
-        """
-            SELECT
-                name AS wire_transfer,
-                account,
-                account_holder,
-                status,
-                request_datetime,
-                transfer_datetime,
-                amount,
-                fees,
-                total
-            FROM `tabWire Transfer`
-            WHERE {clauses}
-        """.format(
-            clauses=clauses
-        ),
-        values=values,
-        as_dict=1,
-    )
-
-    make_row = partial(pick, keys)
-    return mapr(make_row, rows)
+    return q.run(as_dict=1)

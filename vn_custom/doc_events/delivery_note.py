@@ -4,6 +4,7 @@ import json
 from functools import partial
 from toolz import compose, first, get, excepts
 from erpnext.stock.stock_ledger import get_previous_sle
+from frappe.query_builder.functions import IfNull
 
 
 def on_submit(doc, method):
@@ -32,17 +33,16 @@ def set_item_prices(items, posting_date, posting_time):
         get_first = compose(
             partial(get, "name"), excepts(StopIteration, first, lambda __: {})
         )
-        prices = frappe.db.sql(
-            """
-                SELECT name FROM `tabItem Price`
-                WHERE
-                    item_code = %(item_code)s AND
-                    price_list = %(price_list)s AND
-                    IFNULL(uom, '') = ''
-            """,
-            values={"item_code": item_code, "price_list": selling_price_list},
-            as_dict=1,
-        )
+        ItemPrice = frappe.qb.DocType("Item Price")
+        prices = (
+            frappe.qb.from_(ItemPrice)
+            .select(ItemPrice.name)
+            .where(
+                (ItemPrice.item_code == item_code)
+                & (ItemPrice.price_list == selling_price_list)
+                & (IfNull(ItemPrice.uom, "") == "")
+            )
+        ).run(as_dict=1)
         if len(prices) > 1:
             frappe.throw(
                 frappe._(
