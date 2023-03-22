@@ -1,6 +1,6 @@
 {
   "name": "vn_custom",
-  "version": "13.0.1",
+  "version": "14.0.0",
   "description": "Customizations for VN",
   "main": "vn_custom/public/js/index.js",
   "scripts": {
