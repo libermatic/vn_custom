@@ -4,9 +4,9 @@
 *.swp
 tags
 vn_custom/docs/current
-__pycache__
 
-.vscode
+__pycache__
+.env
 
 # Bench runtime
 node_modules/
