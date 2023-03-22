@@ -6,7 +6,6 @@ from functools import partial
 from toolz import compose, pluck, merge, groupby, first, excepts
 
 from vn_custom.utils import pick
-from vn_custom.utils.report import make_column
 
 
 def execute(filters=None):
@@ -18,6 +17,15 @@ def execute(filters=None):
 
 
 def _get_columns(filters):
+    def make_column(key, label=None, type="Data", options=None, width=90):
+        return {
+            "label": frappe._(label or key.replace("_", " ").title()),
+            "fieldname": key,
+            "fieldtype": type,
+            "options": options,
+            "width": width,
+        }
+
     return [
         make_column("posting_date", type="Date", width=90),
         make_column("voucher_type"),
