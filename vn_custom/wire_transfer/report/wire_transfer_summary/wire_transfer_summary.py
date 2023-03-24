@@ -44,9 +44,9 @@ def _get_data(filters):
         .where(
             (WireTransfer.docstatus == 1)
             & (
-                WireTransfer[date_field_map.get(filters.date_type, "creation")][
-                    filters.date_range[0] : filters.date_range[1]
-                ]
+                frappe.query_builder.functions.Date(
+                    WireTransfer[date_field_map.get(filters.date_type, "creation")]
+                )[filters.date_range[0] : filters.date_range[1]]
             )
         )
         .select(
