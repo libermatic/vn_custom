@@ -1,10 +1,11 @@
 import * as cscripts from './custom_scripts';
 import * as scripts from './scripts';
 import * as reports from './reports';
+import { __version__ } from './version';
 
 frappe.provide('vn_custom');
 
-vn_custom = { scripts, reports };
+vn_custom = { __version__, scripts, reports };
 
 function get_doctype(import_name) {
   return import_name
