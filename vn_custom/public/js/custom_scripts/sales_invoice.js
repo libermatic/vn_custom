@@ -1,4 +1,4 @@
-const sales_invoice_item = {
+export const sales_invoice_item = {
   item_code: async function (frm, cdt, cdn) {
     const { item_code } = frappe.get_doc(cdt, cdn);
     if (item_code) {
@@ -27,9 +27,8 @@ const sales_invoice_item = {
   },
 };
 
-const sales_invoice = {
+export const sales_invoice = {
   setup: function (frm) {
-    console.log('setup');
     frm.set_query('uom', 'items', function (doc, cdt, cdn) {
       const { item_code } = frappe.get_doc(cdt, cdn);
       if (item_code) {
@@ -40,9 +39,4 @@ const sales_invoice = {
       }
     });
   },
-};
-
-export default {
-  sales_invoice_item,
-  sales_invoice,
 };
