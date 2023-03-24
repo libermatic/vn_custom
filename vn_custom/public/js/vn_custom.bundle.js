@@ -6,6 +6,9 @@ import * as reports from './reports';
 frappe.ui.form.on(
   'Sales Invoice Item',
   custom_scripts.sales_invoice.sales_invoice_item
+);frappe.ui.form.on(
+  'Sales Invoice',
+  custom_scripts.sales_invoice.sales_invoice
 );
 
 frappe.provide('vn_custom');

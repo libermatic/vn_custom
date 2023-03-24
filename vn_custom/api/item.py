@@ -42,3 +42,20 @@ def get_other_prices(item_code, uom=None):
         "vn_mrp": conversion_factor * get_mrp(item_code),
         "vn_valuation": conversion_factor * get_fifo_rate(item_code),
     }
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def get_uom(doctype, txt, searchfield, start, page_len, filters):
+    item_code = filters.get("item_code")
+    if not item_code:
+        return
+
+    return frappe.get_list(
+        "UOM Conversion Detail",
+        filters={"parent": item_code, "uom": ("like", f"%{txt}%")},
+        fields=["uom"],
+        limit_start=start,
+        limit_page_length=page_len,
+        as_list=1,
+    )
