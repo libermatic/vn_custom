@@ -1,6 +1,6 @@
 import pick from 'lodash/pick';
 
-import { set_details, render_details } from './wire_account';
+import { get_ifsc_details, render_ifsc } from './wire_account';
 
 function set_total(frm) {
   const { amount = 0, fees = 0 } = frm.doc;
@@ -21,15 +21,15 @@ async function set_default_fields(frm) {
 function render_dashboard(frm) {
   if (!frm.doc.__islocal && frm.doc.docstatus < 2) {
     frm.dashboard.show();
-    const $wrapper = $(
-      '<div class="form-dashboard-section custom" />'
-    ).appendTo(frm.dashboard.wrapper);
-    frm.vue_details = render_details(
-      frm,
-      $wrapper.html('<div />').children()[0],
-      true /* isExtended */
+    get_ifsc_details(frm.doc.ifsc).then(
+      (data) =>
+        data &&
+        render_ifsc(
+          data,
+          frm.dashboard.add_section('<div />').children()[0],
+          true /* isExtended */
+        )
     );
-    set_details(frm);
   }
 }
 

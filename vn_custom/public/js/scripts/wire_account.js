@@ -1,6 +1,7 @@
 import pick from 'lodash/pick';
 import mapKeys from 'lodash/mapKeys';
 import camelCase from 'lodash/camelCase';
+import { createApp } from 'vue';
 
 import BranchDetails from '../components/BranchDetails.vue';
 
@@ -19,72 +20,56 @@ const DETAILS_FIELDS = [
   'neft',
 ];
 
-export async function set_details(frm) {
-  function reset_values() {
-    DETAILS_FIELDS.forEach(field => {
-      frm.vue_details[field] = null;
-    });
-  }
-
-  const { ifsc } = frm.doc;
+export async function get_ifsc_details(ifsc) {
   if (!ifsc) {
-    reset_values();
     return;
   }
-  frm.vue_details.isLoading = true;
   const response = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
-  frm.vue_details.isLoading = false;
   if (response.status !== 200) {
-    reset_values();
     return;
   }
   const data = await response.json();
   if (!data) {
-    reset_values();
     return;
   }
-  const data_transformed = mapKeys(data, (v, k) => camelCase(k));
-  DETAILS_FIELDS.forEach(field => {
-    frm.vue_details[field] = data_transformed[field];
-  });
-  return data_transformed;
+  return mapKeys(data, (v, k) => camelCase(k));
 }
 
-async function set_details_and_values(frm) {
-  const data = await set_details(frm);
+async function set_and_render_ifsc(frm, isExtended = false) {
+  const { $wrapper } = frm.get_field('details_html');
+  $wrapper.empty();
+
+  const { ifsc } = frm.doc;
+
+  const data = await get_ifsc_details(ifsc);
+  if (!data) {
+    return;
+  }
+
   if (frm.doc.docstatus === 0) {
-    ['bank', 'branch'].forEach(field => {
-      if (data && data[field]) {
+    ['bank', 'branch'].forEach((field) => {
+      if (data[field]) {
         frm.set_value(field, data[field]);
       }
     });
   }
+
+  render_ifsc(data, $wrapper.html('<div />').children()[0], isExtended);
 }
 
-export function render_details(frm, el, isExtended = false) {
-  return new Vue({
-    data: Object.assign(
-      { isLoading: false, isExtended },
-      ...DETAILS_FIELDS.map(field => ({ [field]: null }))
-    ),
-    el,
-    render: function(h) {
-      return h(BranchDetails, {
-        props: pick(this, ['isLoading', 'isExtended', ...DETAILS_FIELDS]),
-      });
+export function render_ifsc(data, node, isExtended = false) {
+  const props = Object.assign(
+    {
+      isLoading: false,
+      isExtended,
     },
-  });
+    ...DETAILS_FIELDS.map((field) => ({ [field]: data[field] }))
+  );
+
+  createApp(BranchDetails, props).mount(node);
 }
 
 export default {
-  onload: function(frm) {
-    const { $wrapper } = frm.get_field('details_html');
-    $wrapper.empty();
-    frm.vue_details = render_details(
-      frm,
-      $wrapper.html('<div />').children()[0]
-    );
-  },
-  refresh: set_details_and_values,
-  ifsc: set_details_and_values,
+  refresh: set_and_render_ifsc,
+  ifsc: set_and_render_ifsc,
 };
